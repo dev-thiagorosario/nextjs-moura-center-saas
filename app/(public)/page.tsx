@@ -1,5 +1,9 @@
+import { Header } from "./_components/header";
+
 export default function Home() {
   return (
-    <h1>pagina home</h1>
+    <div className="">
+      <Header/>
+    </div>
   )
 }
