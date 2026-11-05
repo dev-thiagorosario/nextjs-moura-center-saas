@@ -16,6 +16,17 @@ import {
 import { HeaderActions } from "./header-actions";
 
 export function Header() {
+
+/*   const navItems = [
+    href:
+  ]
+
+  const NavLinks = () => (
+    <>
+      {navItems.map() => }
+    </>
+  )
+ */
   return (
     <header className="sticky top-0 isolate z-50 border-b border-[#b96a83]/40 bg-[#100d0f]">
       <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-x-1 gap-y-1 px-3 pt-1 pb-3 sm:px-6 lg:flex lg:h-[88px] lg:gap-8 lg:px-10 lg:py-0 xl:gap-16 xl:px-16">
