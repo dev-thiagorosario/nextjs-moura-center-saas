@@ -1,9 +1,13 @@
 import { Header } from "./_components/header";
+import { NavBar } from "./_components/nav-bar";
 
 export default function Home() {
   return (
-    <div className="">
-      <Header/>
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <NavBar />
     </div>
+
+
   )
 }
