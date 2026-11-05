@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Menu, Search, ShoppingBag, UserRound } from "lucide-react";
+import { Heart, LogIn, Menu, Search, ShoppingBag, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import logoWordmark from "../_assets/logo-wordmark-dark.png";
@@ -97,6 +97,7 @@ export function Header() {
             { label: "Minha conta", icon: UserRound },
             { label: "Meus favoritos", icon: Heart },
             { label: "Sacola de compras, 0 itens", icon: ShoppingBag, count: 0 },
+            { label: "Login", icon: LogIn, href: "/login" },
           ]}
         />
       </div>

@@ -1,10 +1,12 @@
 import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
 import type { MouseEventHandler } from "react";
 
 export type HeaderAction = {
   label: string;
   icon: LucideIcon;
   count?: number;
+  href?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
@@ -15,7 +17,17 @@ type HeaderActionsProps = {
 export function HeaderActions({ items }: HeaderActionsProps) {
   return (
     <div className="col-start-3 row-start-1 flex shrink-0 items-center justify-self-end text-[#d5cfd2] sm:gap-2 lg:gap-4 xl:gap-6">
-      {items.map(({ label, icon: Icon, count, onClick }) => (
+      {items.map(({ label, icon: Icon, count, href, onClick }) => href ? (
+        <Link
+          key={label}
+          href={href}
+          aria-label={label}
+          className="flex h-11 w-8 items-center justify-center gap-2 rounded-sm transition-colors hover:text-[#df92ae] focus-visible:outline-2 focus-visible:outline-[#d5809e] lg:w-auto lg:px-2"
+        >
+          <Icon className="size-5 lg:size-7" strokeWidth={1.5} aria-hidden="true" />
+          <span className="hidden text-sm font-medium lg:inline">{label}</span>
+        </Link>
+      ) : (
         <button
           key={label}
           type="button"
