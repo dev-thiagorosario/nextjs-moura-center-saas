@@ -43,11 +43,9 @@ const controlClass = "flex size-9 items-center justify-center rounded-full borde
 export function Hero() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const touchStart = useRef<{ x: number; y: number } | null>(null);
-  const autoplay = !paused && !hovered && !focused && !reducedMotion;
+  const autoplay = !paused && !reducedMotion;
 
   function navigate(direction: number) {
     setActiveIndex((current) => (current + direction + banners.length) % banners.length);
@@ -65,7 +63,7 @@ export function Hero() {
     if (!autoplay) return;
     const timer = window.setInterval(() => {
       if (!document.hidden) setActiveIndex((current) => (current + 1) % banners.length);
-    }, 6500);
+    }, 3500);
     return () => window.clearInterval(timer);
   }, [autoplay, activeIndex]);
 
@@ -74,12 +72,6 @@ export function Hero() {
       aria-label="Destaques e campanhas Moura Center"
       aria-roledescription="carrossel"
       className="relative isolate overflow-hidden bg-[#100d0f] text-white"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocusCapture={() => setFocused(true)}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false);
-      }}
       onKeyDown={(event) => {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
           event.preventDefault();
@@ -107,7 +99,7 @@ export function Hero() {
             aria-roledescription="slide"
             aria-hidden={activeIndex !== index}
             inert={activeIndex !== index}
-            className={`${index === 0 ? "relative" : "absolute inset-0"} min-h-[330px] transition-opacity duration-300 motion-reduce:transition-none sm:min-h-[420px] lg:min-h-[480px] xl:min-h-[520px] ${activeIndex === index ? "z-10 opacity-100" : "pointer-events-none z-0 opacity-0"}`}
+            className={`${index === 0 ? "relative" : "absolute inset-0"} min-h-[330px] transition-opacity duration-100 motion-reduce:transition-none sm:min-h-[420px] lg:min-h-[480px] xl:min-h-[520px] ${activeIndex === index ? "z-10 opacity-100" : "pointer-events-none z-0 opacity-0"}`}
           >
             <Image src={banner.image} alt={banner.alt} fill sizes="100vw" preload={index === 0} className="object-cover object-[62%_center] sm:object-center" />
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-r from-[#100d0f]/90 via-[#100d0f]/30 to-transparent sm:from-[#100d0f]/35 sm:via-transparent" />
