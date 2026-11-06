@@ -1,0 +1,292 @@
+erDiagram
+  StoreSettings {
+    String id PK
+    String name
+    String supportEmail
+    String supportPhone
+    String whatsapp
+    String instagramUrl
+    Decimal freeShippingThreshold
+    DateTime updatedAt
+  }
+  AuditLog {
+    String id PK
+    String actorId
+    String action
+    String entity
+    String entityId
+    Json metadata
+    DateTime createdAt
+  }
+  Cart {
+    String id PK
+    String userId
+    String guestToken UK
+    CartStatus status
+    DateTime expiresAt
+    DateTime createdAt
+    DateTime updatedAt
+  }
+  CartItem {
+    String id PK
+    String cartId
+    String variantId
+    Int quantity
+    DateTime createdAt
+    DateTime updatedAt
+  }
+  Category {
+    String id PK
+    String name
+    String slug UK
+    String description
+    String illustration
+    String parentId
+    Int position
+    Boolean isActive
+  }
+  Product {
+    String id PK
+    String name
+    String slug UK
+    String description
+    ProductStatus status
+    String badge
+    DateTime createdAt
+    DateTime updatedAt
+  }
+  ProductVariant {
+    String id PK
+    String productId
+    String sku UK
+    String name
+    String size
+    String color
+    Decimal price
+    Decimal originalPrice
+    Int weightGrams
+    Boolean isActive
+    DateTime createdAt
+    DateTime updatedAt
+  }
+  ProductImage {
+    String id PK
+    String productId
+    String url
+    String alt
+    Int position
+  }
+  ProductCategory {
+    String productId
+    String categoryId
+  }
+  Favorite {
+    String userId
+    String productId
+    DateTime createdAt
+  }
+  Review {
+    String id PK
+    String userId
+    String productId
+    Int rating
+    String comment
+    Boolean isPublished
+    DateTime createdAt
+    DateTime updatedAt
+  }
+  Account {
+    String id PK
+    String userId
+    String type
+    String provider
+    String providerAccountId
+    String refresh_token
+    String access_token
+    Int expires_at
+    String token_type
+    String scope
+    String id_token
+    String session_state
+  }
+  Session {
+    String id PK
+    String sessionToken UK
+    String userId
+    DateTime expires
+  }
+  User {
+    String id PK
+    String name
+    String email UK
+    DateTime emailVerified
+    String image
+    String phone
+    UserRole role
+    DateTime createdAt
+    DateTime updatedAt
+  }
+  VerificationToken {
+    String identifier
+    String token
+    DateTime expires
+  }
+  Address {
+    String id PK
+    String userId
+    String label
+    String recipient
+    String phone
+    String postalCode
+    String street
+    String number
+    String complement
+    String district
+    String city
+    String state
+    String country
+    Boolean isDefault
+    DateTime createdAt
+    DateTime updatedAt
+  }
+  Inventory {
+    String id PK
+    String variantId UK
+    Int quantity
+    Int reserved
+    Int minimumQuantity
+    DateTime updatedAt
+  }
+  StockMovement {
+    String id PK
+    String inventoryId
+    String orderId
+    StockMovementType type
+    Int quantity
+    String reason
+    DateTime createdAt
+  }
+  Order {
+    String id PK
+    Int number UK
+    String userId
+    String cartId UK
+    OrderStatus status
+    String customerName
+    String customerEmail
+    String customerPhone
+    String currency
+    Decimal subtotal
+    Decimal discountTotal
+    Decimal shippingTotal
+    Decimal total
+    String notes
+    DateTime createdAt
+    DateTime updatedAt
+  }
+  OrderItem {
+    String id PK
+    String orderId
+    String variantId
+    String productName
+    String variantName
+    String sku
+    Int quantity
+    Decimal unitPrice
+    Decimal discountTotal
+    Decimal total
+  }
+  OrderAddress {
+    String id PK
+    String orderId UK
+    String recipient
+    String phone
+    String postalCode
+    String street
+    String number
+    String complement
+    String district
+    String city
+    String state
+    String country
+  }
+  Payment {
+    String id PK
+    String orderId
+    PaymentMethod method
+    PaymentStatus status
+    String provider
+    String externalId
+    String idempotencyKey UK
+    Decimal amount
+    DateTime paidAt
+    DateTime createdAt
+    DateTime updatedAt
+  }
+  Shipment {
+    String id PK
+    String orderId
+    String carrier
+    String service
+    String trackingCode
+    String trackingUrl
+    DateTime shippedAt
+    DateTime deliveredAt
+    DateTime createdAt
+    DateTime updatedAt
+  }
+  Collection {
+    String id PK
+    String slug UK
+    String title
+    String description
+    Int position
+    Boolean isActive
+  }
+  CollectionProduct {
+    String collectionId
+    String productId
+    Int position
+  }
+  Banner {
+    String id PK
+    String title
+    String subtitle
+    String imageUrl
+    String imageAlt
+    String linkUrl
+    Int position
+    Boolean isActive
+    DateTime startsAt
+    DateTime endsAt
+    DateTime createdAt
+    DateTime updatedAt
+  }
+  User |o--o{ AuditLog : actor
+  User |o--o{ Cart : user
+  Cart ||--o{ CartItem : cart
+  ProductVariant ||--o{ CartItem : variant
+  Category |o--o{ Category : parent
+  Product ||--o{ ProductVariant : product
+  Product ||--o{ ProductImage : product
+  Product ||--o{ ProductCategory : product
+  Category ||--o{ ProductCategory : category
+  User ||--o{ Favorite : user
+  Product ||--o{ Favorite : product
+  User ||--o{ Review : user
+  Product ||--o{ Review : product
+  User ||--o{ Account : user
+  User ||--o{ Session : user
+  User ||--o{ Address : user
+  ProductVariant ||--o| Inventory : variant
+  Inventory ||--o{ StockMovement : inventory
+  Order |o--o{ StockMovement : order
+  User |o--o{ Order : user
+  Cart |o--o| Order : cart
+  Order ||--o{ OrderItem : order
+  ProductVariant ||--o{ OrderItem : variant
+  Order ||--o| OrderAddress : order
+  Order ||--o{ Payment : order
+  Order ||--o{ Shipment : order
+  Collection ||--o{ CollectionProduct : collection
+  Product ||--o{ CollectionProduct : product

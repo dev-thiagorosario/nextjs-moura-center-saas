@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Moura Center
 
-## Getting Started
+Next.js com Prisma ORM 7 e PostgreSQL local via Docker Compose.
+Next.js e Prisma executam na máquina; PostgreSQL executa no container.
 
-First, run the development server:
+## Desenvolvimento local
+
+Pré-requisitos: Node.js compatível com o projeto, npm, Docker Engine em execução
+ e Docker Compose v2 com suporte a `--wait`.
 
 ```bash
+npm ci
+cp .env.example .env
+npm run db:up
+npm run db:generate
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Se `.env` já existir, adicione as variáveis do exemplo sem sobrescrever outras
+configurações. Abra http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+O comando `db:up` aguarda o healthcheck. O banco fica acessível apenas localmente,
+em `localhost:5432`. Os dados persistem no volume `postgres_data`, inclusive após
+`npm run db:down`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+As credenciais do exemplo são exclusivas para desenvolvimento local. Mantenha
+`DATABASE_URL` consistente com `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
+e `POSTGRES_PORT`. Se a porta 5432 estiver ocupada, altere a porta nas duas
+configurações. Codifique caracteres especiais da senha na URL.
+As variáveis `POSTGRES_*` inicializam credenciais apenas quando o volume está
+vazio; alterá-las não modifica um banco existente.
 
-## Learn More
+Use `.env` na raiz como configuração comum ao Compose, Prisma e Next.js. Evite
+redefinir `DATABASE_URL` em `.env.local`, pois o CLI Prisma carrega `.env`.
+Não versione `.env`.
 
-To learn more about Next.js, take a look at the following resources:
+## Prisma
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Os scripts selecionam explicitamente `prisma7.config.ts`. Importe o cliente
+compartilhado apenas em código de servidor:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```ts
+import { prisma } from "@/lib/prisma";
 
-## Deploy on Vercel
+const result = await prisma.$queryRaw`SELECT 1 AS connected`;
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+O schema inicial ainda não contém modelos. Após adicionar modelos em
+`prisma/schema.prisma`, crie a primeira migração e gere novamente o cliente:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run db:migrate -- --name init
+npm run db:generate
+```
+
+## Comandos úteis
+
+| Comando | Ação |
+| --- | --- |
+| `npm run db:up` | Inicia o banco e aguarda ficar pronto |
+| `npm run db:down` | Remove containers mantendo os dados |
+| `npm run db:logs` | Acompanha os logs |
+| `npm run db:validate` | Valida o schema |
+| `npm run db:generate` | Gera o Prisma Client |
+| `npm run db:migrate` | Cria e aplica migrações de desenvolvimento |
+| `npm run db:studio` | Abre o Prisma Studio |
+
+Terminal SQL:
+
+```bash
+docker compose exec postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+```
+
+Para apagar **todos os dados locais** e reinicializar no próximo `db:up`:
+
+```bash
+docker compose down --volumes
+```
+
+Referências: [Prisma com Docker](https://www.prisma.io/docs/guides/deployment/docker)
+e [imagem PostgreSQL](https://hub.docker.com/_/postgres).

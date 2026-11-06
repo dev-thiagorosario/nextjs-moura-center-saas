@@ -1,0 +1,36 @@
+enum StockMovementType {
+  RECEIPT
+  SALE
+  RETURN
+  ADJUSTMENT
+}
+
+model Inventory {
+  id              String          @id @default(cuid())
+  variantId       String          @unique
+  quantity        Int             @default(0)
+  reserved        Int             @default(0)
+  minimumQuantity Int             @default(0)
+  updatedAt       DateTime        @updatedAt
+  variant         ProductVariant  @relation(fields: [variantId], references: [id], onDelete: Restrict)
+  movements       StockMovement[]
+
+  @@map("inventory")
+}
+
+// quantity é a variação assinada: entrada positiva, saída negativa.
+model StockMovement {
+  id          String            @id @default(cuid())
+  inventoryId String
+  orderId     String?
+  type        StockMovementType
+  quantity    Int
+  reason      String
+  createdAt   DateTime          @default(now())
+  inventory   Inventory         @relation(fields: [inventoryId], references: [id], onDelete: Restrict)
+  order       Order?            @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@index([inventoryId, createdAt])
+  @@index([orderId])
+  @@map("stock_movements")
+}

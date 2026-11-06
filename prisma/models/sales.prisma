@@ -1,0 +1,129 @@
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELED
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  PAID
+  FAILED
+  CANCELED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  PIX
+  CREDIT_CARD
+  DEBIT_CARD
+  BOLETO
+}
+
+model Order {
+  id              String          @id @default(cuid())
+  number          Int             @unique @default(autoincrement())
+  userId          String?
+  cartId          String?         @unique
+  status          OrderStatus     @default(PENDING)
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  currency        String          @default("BRL") @db.Char(3)
+  subtotal        Decimal         @db.Decimal(12, 2)
+  discountTotal   Decimal         @default(0) @db.Decimal(12, 2)
+  shippingTotal   Decimal         @default(0) @db.Decimal(12, 2)
+  total           Decimal         @db.Decimal(12, 2)
+  notes           String?         @db.Text
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  user            User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  cart            Cart?           @relation(fields: [cartId], references: [id], onDelete: SetNull)
+  items           OrderItem[]
+  shippingAddress OrderAddress?
+  payments        Payment[]
+  shipments       Shipment[]
+  stockMovements  StockMovement[]
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@map("orders")
+}
+
+// Snapshot de nome, SKU e preço para preservar o histórico da compra.
+model OrderItem {
+  id            String         @id @default(cuid())
+  orderId       String
+  variantId     String
+  productName   String
+  variantName   String
+  sku           String
+  quantity      Int
+  unitPrice     Decimal        @db.Decimal(12, 2)
+  discountTotal Decimal        @default(0) @db.Decimal(12, 2)
+  total         Decimal        @db.Decimal(12, 2)
+  order         Order          @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  variant       ProductVariant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([variantId])
+  @@map("order_items")
+}
+
+// Cópia do endereço no checkout, independente da agenda do cliente.
+model OrderAddress {
+  id         String  @id @default(cuid())
+  orderId    String  @unique
+  recipient  String
+  phone      String?
+  postalCode String
+  street     String
+  number     String
+  complement String?
+  district   String
+  city       String
+  state      String  @db.Char(2)
+  country    String  @default("BR") @db.Char(2)
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@map("order_addresses")
+}
+
+model Payment {
+  id             String        @id @default(cuid())
+  orderId        String
+  method         PaymentMethod
+  status         PaymentStatus @default(PENDING)
+  provider       String
+  externalId     String?
+  idempotencyKey String        @unique
+  amount         Decimal       @db.Decimal(12, 2)
+  paidAt         DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  order          Order         @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@unique([provider, externalId])
+  @@index([orderId, status])
+  @@map("payments")
+}
+
+model Shipment {
+  id           String    @id @default(cuid())
+  orderId      String
+  carrier      String
+  service      String?
+  trackingCode String?
+  trackingUrl  String?
+  shippedAt    DateTime?
+  deliveredAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  order        Order     @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@map("shipments")
+}
