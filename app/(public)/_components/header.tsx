@@ -13,20 +13,23 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { HeaderActions } from "./header-actions";
+import { HeaderActions, type HeaderAction } from "./header-actions";
+import { useSession } from "next-auth/react";
 
 export function Header() {
 
-/*   const navItems = [
-    href:
-  ]
+  const { status } = useSession();
+  const items: HeaderAction[] = [
+    ...(status === "authenticated"
+      ? [
+          { label: "Minha conta", icon: UserRound },
+          { label: "Meus favoritos", icon: Heart },
+        ]
+      : []),
+    { label: "Sacola de compras, 0 itens", icon: ShoppingBag, count: 0 },
+    { label: "Login", icon: LogIn, href: "/login" },
+  ];
 
-  const NavLinks = () => (
-    <>
-      {navItems.map() => }
-    </>
-  )
- */
   return (
     <header className="sticky top-0 isolate z-50 border-b border-[#b96a83]/40 bg-[#100d0f]">
       <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-x-1 gap-y-1 px-3 pt-1 pb-3 sm:px-6 lg:flex lg:h-[88px] lg:gap-8 lg:px-10 lg:py-0 xl:gap-16 xl:px-16">
@@ -92,14 +95,7 @@ export function Header() {
             <Search className="size-5 lg:size-[23px]" strokeWidth={1.8} aria-hidden="true" />
           </button>
         </form>
-        <HeaderActions
-          items={[
-            { label: "Minha conta", icon: UserRound },
-            { label: "Meus favoritos", icon: Heart },
-            { label: "Sacola de compras, 0 itens", icon: ShoppingBag, count: 0 },
-            { label: "Login", icon: LogIn, href: "/login" },
-          ]}
-        />
+        <HeaderActions items={items} />
       </div>
     </header>
   );
