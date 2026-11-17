@@ -1,13 +1,13 @@
-import getSession from "@/lib/getSession";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Profile from "./_components/profile";
+import { getUserData } from "./_data-access/get-info-user";
 
-export default async function Profile() {
-  const session = await getSession();
+export const metadata: Metadata = { title: "Meu perfil | Moura Center" };
 
-  if (!session) {
-    redirect("/");
-  }
+export default async function ProfilePage() {
+  const user = await getUserData();
+  if (!user) redirect("/");
 
-  return <Profile />;
+  return <Profile user={user} />;
 }
