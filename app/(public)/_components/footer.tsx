@@ -45,7 +45,8 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-export function Footer() {
+export async function Footer() {
+  "use cache";
   return (
     <footer className="mt-auto border-t border-[#b96a83]/40 bg-[#100d0f] text-[#d5cfd2]">
       <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-10 xl:px-16">

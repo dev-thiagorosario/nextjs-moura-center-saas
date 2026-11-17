@@ -1,4 +1,4 @@
-export function OrdersDetails() {
+export default function OrdersDetails() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <h1 className="text-4xl font-bold">Detalhes do Pedido</h1>

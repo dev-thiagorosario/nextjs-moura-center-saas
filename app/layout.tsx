@@ -28,7 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SessionAuthProvider>
           {children}
         </SessionAuthProvider>
-        </body>
+      </body>
     </html>
   );
 }
