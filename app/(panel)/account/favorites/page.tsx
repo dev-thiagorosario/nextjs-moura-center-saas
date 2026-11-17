@@ -1,4 +1,4 @@
-export function favorites() {
+export default function favorites() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <h1 className="text-4xl font-bold">Favoritos</h1>
