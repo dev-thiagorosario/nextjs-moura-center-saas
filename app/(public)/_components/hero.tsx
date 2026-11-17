@@ -38,7 +38,7 @@ const banners = [
   },
 ];
 
-const controlClass = "flex size-9 items-center justify-center rounded-full border border-white/25 bg-black/25 text-white transition-colors hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-[#f5c5d1]";
+const controlClass = "flex size-11 items-center justify-center rounded-full border border-white/25 bg-black/25 text-white transition-colors hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-[#f5c5d1]";
 
 export function Hero() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -99,19 +99,19 @@ export function Hero() {
             aria-roledescription="slide"
             aria-hidden={activeIndex !== index}
             inert={activeIndex !== index}
-            className={`${index === 0 ? "relative" : "absolute inset-0"} min-h-[330px] transition-opacity duration-100 motion-reduce:transition-none sm:min-h-[420px] lg:min-h-[480px] xl:min-h-[520px] ${activeIndex === index ? "z-10 opacity-100" : "pointer-events-none z-0 opacity-0"}`}
+            className={`${index === 0 ? "relative" : "absolute inset-0"} min-h-[330px] transition-opacity duration-100 motion-reduce:transition-none sm:min-h-[480px] lg:min-h-[560px] xl:min-h-[620px] ${activeIndex === index ? "z-10 opacity-100" : "pointer-events-none z-0 opacity-0"}`}
           >
             <Image src={banner.image} alt={banner.alt} fill sizes="100vw" preload={index === 0} className="object-cover object-[62%_center] sm:object-center" />
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-r from-[#100d0f]/90 via-[#100d0f]/30 to-transparent sm:from-[#100d0f]/35 sm:via-transparent" />
-            <div className="relative mx-auto flex min-h-[330px] max-w-[1440px] items-center px-6 pt-6 pb-20 sm:min-h-[420px] sm:px-12 lg:min-h-[480px] lg:px-24 lg:pt-10 lg:pb-24 xl:min-h-[520px] xl:px-32">
+            <div className="relative mx-auto flex min-h-[330px] max-w-[1440px] items-center px-6 pt-6 pb-20 sm:min-h-[480px] sm:px-6 lg:min-h-[560px] lg:px-10 lg:pt-10 lg:pb-24 xl:min-h-[620px] xl:px-16">
               <div className="w-[68%] max-w-[530px] sm:w-[55%]">
-                <p className="mb-3 text-[9px] font-medium tracking-[0.18em] text-[#f0b5c9] uppercase sm:text-xs">Promoções · {banner.category}</p>
-                <h2 className="text-[clamp(2rem,7.5vw,3rem)] leading-[1.02] font-light tracking-tight sm:text-6xl lg:text-7xl xl:text-[80px]">
+                <p className="mb-3 text-sm font-medium text-[#f5c5d1] sm:text-base">{banner.category}</p>
+                <h1 className="text-[clamp(2rem,7.5vw,3rem)] leading-[1.02] font-light tracking-tight sm:text-6xl lg:text-7xl xl:text-[80px]">
                   {banner.title}
-                  <span className="mt-1 block text-[#e38eaa] italic sm:ml-8">{banner.highlight}</span>
-                </h2>
+                  <span className="mt-1 block text-white">{banner.highlight}</span>
+                </h1>
                 <p className="mt-4 max-w-[230px] text-[13px] leading-snug text-[#eee8eb] sm:mt-5 sm:max-w-[350px] sm:text-lg lg:text-xl">{banner.description}</p>
-                <Link href={banner.href} className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#b74368] px-3 py-3 text-[10px] font-medium uppercase shadow-lg shadow-black/10 transition-colors hover:bg-[#9d3456] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f5c5d1] min-[390px]:px-4 min-[390px]:text-xs sm:mt-7 sm:gap-4 sm:px-7 sm:py-4 sm:text-base lg:text-lg">
+                <Link href={banner.href} className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-md bg-[#a7365b] px-3 py-3 text-[10px] font-medium shadow-lg shadow-black/10 transition-colors hover:bg-[#9d3456] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f5c5d1] min-[390px]:px-4 min-[390px]:text-xs sm:mt-7 sm:gap-4 sm:px-7 sm:py-4 sm:text-base lg:text-lg">
                   {banner.action}
                   <ArrowRight aria-hidden="true" className="size-4 shrink-0 sm:size-6" strokeWidth={1.5} />
                 </Link>
@@ -120,7 +120,7 @@ export function Hero() {
           </article>
         ))}
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-4 z-20 mx-auto flex max-w-[1440px] items-center justify-between px-6 sm:bottom-6 sm:px-12 lg:px-24 xl:px-32">
+      <div className="pointer-events-none absolute inset-x-0 bottom-4 z-20 mx-auto flex max-w-[1440px] items-center justify-between px-6 sm:bottom-6 sm:px-12 lg:px-10 xl:px-16">
         <div className="pointer-events-auto flex items-center gap-1" role="group" aria-label="Escolher banner">
           {banners.map((banner, index) => (
             <button key={banner.category} type="button" aria-label={`Ver banner ${index + 1}: ${banner.category}`} aria-controls={`hero-slide-${index}`} aria-current={activeIndex === index ? "true" : undefined} onClick={() => setActiveIndex(index)} className="flex size-8 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-[#f5c5d1]">
