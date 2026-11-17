@@ -15,14 +15,14 @@ function ProductCard({ product }: { product: Product }) {
   const [added, setAdded] = useState(false);
 
   return (
-    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-[#ecdfe4] bg-white shadow-[0_2px_12px_-8px_#67394b30] transition-shadow hover:shadow-[0_8px_24px_-12px_#67394b50]">
-      <div className="relative aspect-[4/3] overflow-hidden bg-[#f1e8ec] sm:aspect-[4/3]">
+    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-lg border border-[#ecdfe4] bg-white transition-shadow hover:shadow-[0_8px_24px_-12px_#67394b50]">
+      <div className="relative aspect-[4/5] overflow-hidden bg-[#f1e8ec] sm:aspect-[4/5]">
         <Image
           src={product.image}
           alt={product.imageAlt}
           fill
           sizes="(min-width: 1440px) 205px, (min-width: 1280px) 16vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.025] motion-reduce:transform-none motion-reduce:transition-none"
         />
         {product.badge && (
           <span className="absolute top-3 left-3 max-w-[calc(100%-4rem)] rounded-full bg-[#fffafb]/95 px-2 py-1 text-[9px] font-semibold tracking-wide text-[#963752] sm:px-3 sm:text-[10px]">
@@ -51,7 +51,7 @@ function ProductCard({ product }: { product: Product }) {
           <span className="text-[10px] text-[#806c75]" aria-hidden="true">{product.rating.toLocaleString("pt-BR")} ({product.reviews})</span>
         </div>
         <div className="mt-auto pt-3">
-          <div className="min-h-4 text-[10px] text-[#927d86] sm:text-xs">
+          <div className="min-h-4 text-[10px] text-[#74616a] sm:text-xs">
             {product.originalPrice && <del>{currency.format(product.originalPrice)}</del>}
           </div>
           <p className="text-base font-bold tracking-tight text-[#30242a] sm:text-lg">{currency.format(product.price)}</p>
@@ -61,7 +61,7 @@ function ProductCard({ product }: { product: Product }) {
             onClick={() => setAdded(!added)}
             aria-pressed={added}
             aria-label={`${added ? "Remover" : "Adicionar"} ${product.name} ${added ? "da" : "à"} sacola de demonstração`}
-            className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[#b74368] px-2 py-2 text-xs font-medium text-white transition-colors hover:bg-[#963752] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b74368] sm:text-sm"
+            className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[#a7365b] px-2 py-2 text-xs font-medium text-white transition-colors hover:bg-[#963752] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b74368] sm:text-sm"
           >
             {added ? <Check className="size-4 shrink-0" aria-hidden="true" /> : <ShoppingBag className="size-4 shrink-0" strokeWidth={1.6} aria-hidden="true" />}
             {added ? "Adicionado" : "Adicionar"}
@@ -118,10 +118,10 @@ function ProductRow({ collection }: { collection: ProductCollection }) {
   }
 
   return (
-    <section aria-labelledby={`${collection.id}-title`} className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 sm:py-8 lg:px-10 xl:px-16">
+    <section aria-labelledby={`${collection.id}-title`} className="mx-auto max-w-[1440px] px-4 py-8 sm:px-6 sm:py-12 lg:px-10 xl:px-16">
       <div className="mb-5 sm:mb-6">
         <div className="flex items-center gap-4 sm:gap-6">
-          <h2 id={`${collection.id}-title`} className="shrink-0 text-xl font-semibold tracking-tight sm:text-2xl">{collection.title}</h2>
+          <h2 id={`${collection.id}-title`} className="shrink-0 text-2xl font-medium tracking-tight sm:text-3xl">{collection.title}</h2>
           <span aria-hidden="true" className="h-px flex-1 bg-[#d9c4cd]" />
           <button
             type="button"

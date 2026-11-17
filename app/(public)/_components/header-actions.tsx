@@ -22,7 +22,7 @@ export function HeaderActions({ items }: HeaderActionsProps) {
           key={label}
           href={href}
           aria-label={label}
-          className="flex h-11 w-8 items-center justify-center gap-2 rounded-sm transition-colors hover:text-[#df92ae] focus-visible:outline-2 focus-visible:outline-[#d5809e] lg:w-auto lg:px-2"
+          className="flex h-11 w-11 items-center justify-center gap-2 rounded-sm transition-colors hover:text-[#df92ae] focus-visible:outline-2 focus-visible:outline-[#d5809e] lg:w-auto lg:px-2"
         >
           <Icon className="size-5 lg:size-7" strokeWidth={1.5} aria-hidden="true" />
           <span className="hidden text-sm font-medium lg:inline">{label}</span>
@@ -33,7 +33,7 @@ export function HeaderActions({ items }: HeaderActionsProps) {
           type="button"
           aria-label={label}
           onClick={onClick}
-          className="relative flex h-11 w-8 items-center justify-center rounded-sm transition-colors hover:text-[#df92ae] focus-visible:outline-2 focus-visible:outline-[#d5809e] lg:w-11 cursor-pointer"
+          className="relative flex h-11 w-11 items-center justify-center rounded-sm transition-colors hover:text-[#df92ae] focus-visible:outline-2 focus-visible:outline-[#d5809e] lg:w-11 cursor-pointer"
         >
           <Icon className="size-5 lg:size-7" strokeWidth={1.5} aria-hidden="true" />
           {count !== undefined && (
