@@ -1,13 +1,13 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import getSession from "@/lib/getSession";
+import { getCurrentUser } from "@/lib/data-access/current-user";
 import { revalidatePath } from "next/cache";
 import { validateProfile, type ProfileResult } from "../_components/profile-schema";
 
 export async function updateProfile(values: unknown): Promise<ProfileResult> {
-  const session = await getSession();
-  if (!session?.user?.id) {
+  const user = await getCurrentUser();
+  if (!user) {
     return { success: false, message: "Sua sessão expirou. Entre novamente para salvar." };
   }
 
@@ -18,7 +18,7 @@ export async function updateProfile(values: unknown): Promise<ProfileResult> {
 
   try {
     await prisma.user.update({
-      where: { id: session.user.id },
+      where: { id: user.id },
       data: { name: parsed.data.name, phone: parsed.data.phone || null },
       select: { id: true },
     });

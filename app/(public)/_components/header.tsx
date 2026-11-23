@@ -22,12 +22,12 @@ export function Header() {
   const items: HeaderAction[] = [
     ...(status === "authenticated"
       ? [
-          { label: "Minha conta", icon: UserRound },
+          { label: "Minha conta", icon: UserRound, href: "/account" },
           { label: "Meus favoritos", icon: Heart },
         ]
       : []),
     { label: "Sacola de compras, 0 itens", icon: ShoppingBag, count: 0 },
-    { label: "Login", icon: LogIn, href: "/login" },
+    ...(status === "unauthenticated" ? [{ label: "Entrar", icon: LogIn, href: "/login" }] : []),
   ];
 
   return (

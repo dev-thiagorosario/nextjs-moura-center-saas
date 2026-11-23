@@ -1,7 +1,6 @@
 import { ArrowRight, Heart, MapPin, ShoppingBag, UserRound } from "lucide-react";
 import Link from "next/link";
-import getSession from "@/lib/getSession";
-import { redirect } from "next/navigation";
+import { requireAccount } from "@/lib/data-access/current-user";
 
 const sections = [
   { href: "/account/orders", title: "Meus Pedidos", description: "Consulte seu histórico de compras e acompanhe seus pedidos.", action: "Ver meus pedidos", icon: ShoppingBag },
@@ -11,12 +10,7 @@ const sections = [
 ];
 
 export default async function Account() {
-
-  const session = await getSession();
-
-  if(!session) {
-    redirect("/")
-  }
+  await requireAccount();
 
   return (
     <div className="max-w-[860px]">

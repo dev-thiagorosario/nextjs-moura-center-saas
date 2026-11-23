@@ -1,17 +1,12 @@
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { Header } from "@/app/(public)/_components/header";
 import { Footer } from "@/app/(public)/_components/footer";
 import { Sidebar } from "./_components/sidebar";
 import "@/components/storefront.css";
-import getSession from "@/lib/getSession";
-import { redirect } from "next/navigation";
+import { requireAccount } from "@/lib/data-access/current-user";
 
-export default async function AccountLayout({ children }: { children: ReactNode }) {
-  const session = await getSession();
-
-  if (!session) {
-    redirect("/");
-  }
+async function AccountContent({ children }: { children: ReactNode }) {
+  await requireAccount();
 
   return (
     <div className="storefront flex min-h-screen flex-col">
@@ -24,5 +19,13 @@ export default async function AccountLayout({ children }: { children: ReactNode 
       </div>
       <Footer />
     </div>
+  );
+}
+
+export default function AccountLayout({ children }: { children: ReactNode }) {
+  return (
+    <Suspense>
+      <AccountContent>{children}</AccountContent>
+    </Suspense>
   );
 }

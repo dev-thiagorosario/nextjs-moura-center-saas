@@ -1,12 +1,7 @@
-import getSession from "@/lib/getSession";
-import { redirect } from "next/navigation";
+import { requireAccount } from "@/lib/data-access/current-user";
 
 export default async function OrdersDetails() {
-  const session = await getSession();
-
-  if (!session) {
-    redirect("/");
-  }
+  await requireAccount();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">

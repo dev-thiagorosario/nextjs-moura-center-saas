@@ -1,17 +1,10 @@
 import "server-only";
 
-import getSession from "@/lib/getSession";
-import { prisma } from "@/lib/prisma";
+import { requireAccount } from "@/lib/data-access/current-user";
 
-/** Only the authenticated user's public profile fields leave the data layer. */
 export async function getUserData() {
-  const session = await getSession();
-  if (!session?.user?.id) return null;
-
-  return prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { name: true, email: true, phone: true, image: true },
-  });
+  const { name, email, phone, image } = await requireAccount();
+  return { name, email, phone, image };
 }
 
-export type UserProfile = NonNullable<Awaited<ReturnType<typeof getUserData>>>;
+export type UserProfile = Awaited<ReturnType<typeof getUserData>>;
