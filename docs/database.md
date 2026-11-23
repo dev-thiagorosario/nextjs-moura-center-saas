@@ -41,6 +41,8 @@ npm run db:generate
 
 Para futuras alterações, use `npm run db:migrate -- --name nome_da_alteracao`. A migração inicial cria as tabelas, índices, chaves estrangeiras e restrições. Não inclui seed nem conecta os componentes da vitrine ao banco: a página ainda utiliza `app/(public)/_data/products.ts`.
 
+Em uma base que já tem a tabela `users`, a migração `20261108120000_add_password_login` acrescenta o campo opcional `password_hash`. Para habilitar login por senha em uma conta existente, grave em `User.passwordHash` o resultado de `hashPassword` de `lib/hashPassword.ts`. Contas com o campo vazio continuam usando os provedores sociais configurados.
+
 ## Diagrama completo
 
 Fonte independente: [database.mmd](./database.mmd). As entidades correspondem aos models Prisma; `@@map` define os nomes físicos das tabelas. Marcadores indicam relações obrigatórias/opcionais e cardinalidade. Regras como “ao menos uma variante por produto” são responsabilidade da aplicação.
