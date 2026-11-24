@@ -1,0 +1,112 @@
+.moura-login-page {
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 4rem);
+  background: #fbf3f5;
+}
+
+.moura-login-shell {
+  display: grid;
+  width: min(100%, 73rem);
+  border: 1px solid var(--shop-line);
+  border-radius: 1.5rem;
+  background: white;
+  box-shadow: 0 20px 64px #55223b0c;
+}
+
+.moura-login-access {
+  display: grid;
+  min-width: 0;
+  justify-items: center;
+  align-content: center;
+  padding: 1.25rem clamp(1.25rem, 5vw, 4rem) 2.5rem;
+}
+
+.moura-login-back {
+  display: inline-flex;
+  min-height: 44px;
+  width: min(100%, 25rem);
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--shop-brand);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.moura-login-back:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.moura-login-content {
+  width: min(100%, 25rem);
+  padding-top: clamp(1.25rem, 4vw, 2.75rem);
+  animation: moura-login-enter 320ms ease-out both;
+}
+
+@keyframes moura-login-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.moura-login-brand {
+  display: block;
+  color: var(--shop-brand);
+  font-weight: 650;
+}
+
+.moura-login-content h1 {
+  margin-top: 0.55rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.25rem, 4.1vw, 3.55rem);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.moura-login-description {
+  margin-top: 0.9rem;
+  color: var(--shop-muted);
+  line-height: 1.55;
+}
+
+.moura-login-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: var(--shop-muted);
+  font-size: 0.875rem;
+}
+
+.moura-login-divider::before,
+.moura-login-divider::after {
+  height: 1px;
+  flex: 1;
+  background: var(--shop-line);
+  content: "";
+}
+
+.moura-login-photo {
+  position: relative;
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .moura-login-shell {
+    grid-template-columns: 1.05fr 1fr;
+    min-height: 42rem;
+  }
+
+  .moura-login-access {
+    padding-block: 2rem 3rem;
+  }
+
+  .moura-login-photo {
+    display: block;
+    overflow: hidden;
+    margin: 0.75rem;
+    border-radius: 1rem;
+    background: #e9e5e5;
+  }
+}

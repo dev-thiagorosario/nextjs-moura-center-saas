@@ -46,6 +46,7 @@ export function Login() {
           type="email"
           autoComplete="username"
           autoCapitalize="none"
+          spellCheck={false}
           placeholder="voce@exemplo.com"
           required
           aria-invalid={Boolean(errors.email)}
@@ -97,7 +98,7 @@ export function Login() {
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="h-12 w-full cursor-pointer rounded-md bg-[var(--shop-brand)] text-white hover:bg-[#862744]"
+        className="h-12 w-full cursor-pointer rounded-lg bg-[var(--shop-brand)] text-white transition-colors hover:bg-[#862744] disabled:cursor-wait"
       >
         {isSubmitting ? "Entrando…" : "Entrar"}
         <ArrowRight aria-hidden="true" />

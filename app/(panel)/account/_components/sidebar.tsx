@@ -1,8 +1,10 @@
 "use client";
 
-import { ArrowUpRight, Heart, House, MapPin, ShoppingBag, UserRound } from "lucide-react";
+import { ArrowUpRight, Heart, House, LogOut, MapPin, Scissors, ShoppingBag, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useActionState } from "react";
+import { handleLogout } from "../profile/_actions/logout";
 
 const navigation = [
   { href: "/account", label: "Minha conta", description: "Visão geral da sua conta", icon: House },
@@ -14,6 +16,8 @@ const navigation = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [logoutError, logoutAction, isLoggingOut] = useActionState(handleLogout, "");
+
   return (
     <aside className="border-b border-[#ecdfe4] pb-6 lg:border-r lg:border-b-0 lg:pr-8 lg:pb-0">
       <div className="mb-6 hidden lg:block">
@@ -31,7 +35,27 @@ export function Sidebar() {
             </Link>
           );
         })}
+        <div className="flex min-h-14 items-center gap-3 rounded-lg border border-transparent px-3 py-3 text-sm text-(--shop-muted) lg:px-4 lg:py-4">
+          <Scissors className="size-5 shrink-0" strokeWidth={1.5} aria-hidden="true" />
+          <span className="min-w-0">
+            <span className="block font-medium">Ateliê &amp; Consultoria</span>
+            <span className="mt-1 block text-xs">Em breve</span>
+          </span>
+        </div>
       </nav>
+      <form action={logoutAction} className="mt-3">
+        <button
+          type="submit"
+          disabled={isLoggingOut}
+          className="flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-lg border border-transparent px-3 py-3 text-left text-sm font-medium text-[#92304f] transition-colors hover:border-[#ecdfe4] hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#92304f] disabled:cursor-wait disabled:opacity-60 lg:px-4 lg:py-4"
+        >
+          <LogOut className="size-5 shrink-0" strokeWidth={1.5} aria-hidden="true" />
+          {isLoggingOut ? "Saindo…" : "Sair da conta"}
+        </button>
+        <p role="status" className="px-3 text-sm text-[#92304f] lg:px-4">
+          {logoutError}
+        </p>
+      </form>
       <Link href="/" className="mt-10 hidden min-h-11 items-center justify-between border-t border-[#ecdfe4] pt-6 text-sm text-[#74616a] hover:text-[#a7365b] lg:flex">Continuar comprando <ArrowUpRight className="size-4" aria-hidden="true" /></Link>
     </aside>
   );

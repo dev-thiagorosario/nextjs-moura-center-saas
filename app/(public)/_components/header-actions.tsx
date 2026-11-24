@@ -25,7 +25,7 @@ export function HeaderActions({ items }: HeaderActionsProps) {
           className="flex h-11 w-11 items-center justify-center gap-2 rounded-sm transition-colors hover:text-[#df92ae] focus-visible:outline-2 focus-visible:outline-[#d5809e] lg:w-auto lg:px-2"
         >
           <Icon className="size-5 lg:size-7" strokeWidth={1.5} aria-hidden="true" />
-          <span className="hidden text-sm font-medium lg:inline">{label}</span>
+          <span className="hidden max-w-36 truncate text-sm font-medium lg:inline">{label}</span>
         </Link>
       ) : (
         <button
