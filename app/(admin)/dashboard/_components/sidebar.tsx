@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { House, ShoppingBag, Tag, Users, Layers, Settings, Menu, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import logoWordmark from "../../(public)/_assets/logo-wordmark-dark.png";
+import logoWordmark from "@/app/(public)/_assets/logo-wordmark-dark.png";
 
 const items = [
   { href: "/dashboard", label: "Visão geral", icon: House },
