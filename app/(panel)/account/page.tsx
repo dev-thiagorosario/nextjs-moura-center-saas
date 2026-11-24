@@ -1,4 +1,4 @@
-import { ArrowRight, Heart, MapPin, ShoppingBag, UserRound } from "lucide-react";
+import { ArrowRight, Heart, MapPin, Scissors, ShoppingBag, UserRound } from "lucide-react";
 import Link from "next/link";
 import { requireAccount } from "@/lib/data-access/current-user";
 
@@ -10,12 +10,12 @@ const sections = [
 ];
 
 export default async function Account() {
-  await requireAccount();
+  const user = await requireAccount();
 
   return (
     <div className="max-w-[860px]">
       <header className="mb-8 border-b border-[#ecdfe4] pb-8 sm:mb-10 sm:pb-10">
-        <h1 className="text-3xl font-medium tracking-tight sm:text-4xl">Minha conta</h1>
+        <h1 className="break-words text-3xl font-medium tracking-tight sm:text-4xl">{user.name?.trim() || "Minha conta"}</h1>
         <p className="mt-3 max-w-xl text-sm leading-6 text-[#74616a] sm:text-base">
           Bem-vinda ao seu espaço na Moura Center. Acesse suas compras, seus favoritos e suas informações pessoais.
         </p>
@@ -35,6 +35,16 @@ export default async function Account() {
               </span>
             </Link>
           ))}
+          <article className="flex flex-col rounded-lg border border-[#ecdfe4] bg-white p-6 sm:p-7">
+            <Scissors className="mb-5 size-6 text-[#a7365b]" strokeWidth={1.5} aria-hidden="true" />
+            <h3 className="text-lg font-medium tracking-tight">Ateliê &amp; Consultoria</h3>
+            <p className="mt-2 mb-6 text-sm leading-6 text-[#74616a]">
+              Consultoria de moda e criação de peças sob medida.
+            </p>
+            <span className="mt-auto flex min-h-11 items-center text-sm font-medium text-[#74616a]">
+              Em breve
+            </span>
+          </article>
         </div>
       </section>
     </div>
