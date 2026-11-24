@@ -4,6 +4,8 @@ export interface ProfileFormData {
   phone: string;
 }
 
+export const profilePhotoMaxBytes = 900 * 1024;
+
 /** Mapeamento de erros de validação por campo do formulário. */
 export type ProfileFieldErrors = Partial<Record<keyof ProfileFormData, string>>;
 

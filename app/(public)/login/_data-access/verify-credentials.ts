@@ -7,7 +7,7 @@ import type { LoginValues } from "../_components/login-schema";
 export async function verifyCredentials({ email, password }: LoginValues) {
   const users = await prisma.user.findMany({
     where: { email: { equals: email, mode: "insensitive" } },
-    select: { id: true, name: true, email: true, image: true, passwordHash: true },
+    select: { id: true, name: true, email: true, passwordHash: true },
     take: 2,
   });
 
@@ -16,5 +16,5 @@ export async function verifyCredentials({ email, password }: LoginValues) {
 
   if (!user || !validPassword) return null;
 
-  return { id: user.id, name: user.name, email: user.email, image: user.image };
+  return { id: user.id, name: user.name, email: user.email };
 }
