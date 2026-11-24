@@ -1,8 +1,8 @@
-"use client";
-
 import { Heart, LogIn, Menu, Search, ShoppingBag, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
+import { getCurrentUser } from "@/lib/data-access/current-user";
 import logoWordmark from "../_assets/logo-wordmark-dark.png";
 import {
   Sheet,
@@ -14,22 +14,40 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { HeaderActions, type HeaderAction } from "./header-actions";
-import { useSession } from "next-auth/react";
 
-export function Header() {
+const bag: HeaderAction = { label: "Sacola de compras, 0 itens", icon: ShoppingBag, count: 0 };
 
-  const { status } = useSession();
+async function MobileAccountLink() {
+  const user = await getCurrentUser();
+  if (!user) return null;
+
+  return (
+    <SheetClose
+      render={<Link href="/account" />}
+      className="block break-words rounded-md px-3 py-3 hover:bg-muted focus-visible:outline-2 focus-visible:outline-[#d5809e]"
+    >
+      {user.name?.trim() || "Minha conta"}
+    </SheetClose>
+  );
+}
+
+async function StorefrontActions() {
+  const user = await getCurrentUser();
+  const name = user?.name?.trim() || "Minha conta";
   const items: HeaderAction[] = [
-    ...(status === "authenticated"
+    ...(user
       ? [
-          { label: "Minha conta", icon: UserRound, href: "/account" },
+          { label: name, icon: UserRound, href: "/account" },
           { label: "Meus favoritos", icon: Heart },
         ]
       : []),
-    { label: "Sacola de compras, 0 itens", icon: ShoppingBag, count: 0 },
-    ...(status === "unauthenticated" ? [{ label: "Entrar", icon: LogIn, href: "/login" }] : []),
+    bag,
+    ...(!user ? [{ label: "Entrar", icon: LogIn, href: "/login" }] : []),
   ];
+  return <HeaderActions items={items} />;
+}
 
+export function Header() {
   return (
     <header className="sticky top-0 isolate z-50 border-b border-[#b96a83]/40 bg-[#100d0f]">
       <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-x-1 gap-y-1 px-3 pt-1 pb-3 sm:px-6 lg:flex lg:h-[88px] lg:gap-8 lg:px-10 lg:py-0 xl:gap-16 xl:px-16">
@@ -53,6 +71,9 @@ export function Header() {
                 >
                   Página inicial
                 </SheetClose>
+                <Suspense>
+                  <MobileAccountLink />
+                </Suspense>
               </nav>
             </SheetContent>
           </Sheet>
@@ -95,7 +116,9 @@ export function Header() {
             <Search className="size-5 lg:size-[23px]" strokeWidth={1.8} aria-hidden="true" />
           </button>
         </form>
-        <HeaderActions items={items} />
+        <Suspense fallback={<HeaderActions items={[bag]} />}>
+          <StorefrontActions />
+        </Suspense>
       </div>
     </header>
   );
