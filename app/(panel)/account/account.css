@@ -1,0 +1,246 @@
+.account-layout {
+  --account-ink: #231c20;
+  --account-brand: #552339;
+  --account-muted: #605457;
+  --account-line: #e0d8d4;
+  --account-paper: #fcfaf8;
+  --account-soft: #f2eae5;
+  --account-serif: Baskerville, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --account-ease: cubic-bezier(.2, .75, .3, 1);
+  --account-gutter: clamp(16px, 3.6vw, 56px);
+}
+
+.account-layout:has(.account-editorial) {
+  background: var(--account-paper);
+}
+
+.account-frame:has(.account-editorial) {
+  padding: 20px var(--account-gutter) clamp(52px, 7vw, 96px);
+}
+
+.account-grid:has(.account-editorial) {
+  align-items: start;
+  gap: 24px;
+  min-height: 0;
+}
+
+.account-skip {
+  position: fixed;
+  z-index: 60;
+  top: 12px;
+  left: var(--account-gutter);
+  padding: 12px 16px;
+  background: var(--account-paper);
+  color: var(--account-brand);
+  clip-path: inset(50%);
+}
+
+.account-skip:focus { clip-path: none; }
+.account-layout #account-content { scroll-margin-top: 7rem; }
+
+.account-editorial {
+  --shop-ink: var(--account-ink);
+  --shop-muted: var(--account-muted);
+  --shop-line: var(--account-line);
+  --shop-brand: var(--account-brand);
+  color: var(--account-ink);
+}
+
+.account-layout .account-editorial :is(a, button, input):focus-visible {
+  outline-color: var(--account-brand);
+  outline-offset: 3px;
+}
+
+.account-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--account-brand);
+  font-size: .6875rem;
+  font-weight: 650;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+
+.account-eyebrow::before {
+  width: 20px;
+  height: 1px;
+  background: currentColor;
+  content: "";
+}
+
+.account-title {
+  margin-block: 9px 12px;
+  font-family: var(--account-serif);
+  font-size: clamp(2.65rem, 5vw, 4.7rem);
+  font-weight: 400;
+  line-height: .99;
+  letter-spacing: -.055em;
+  overflow-wrap: anywhere;
+}
+
+.account-title em {
+  color: var(--account-brand);
+  font-weight: inherit;
+}
+
+.account-lead {
+  max-width: 48ch;
+  color: var(--account-muted);
+  font-size: .9375rem;
+  line-height: 1.6;
+}
+
+.account-cover {
+  display: grid;
+  background: var(--account-soft);
+}
+
+.account-cover-copy {
+  align-self: center;
+  padding: clamp(22px, 4vw, 56px);
+}
+
+.account-cover-photo {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(130px, 36vw, 180px);
+  background: #d4baad;
+}
+
+.account-cover-photo img {
+  object-fit: cover;
+  object-position: center 52%;
+}
+
+.account-directory { margin-top: clamp(30px, 4vw, 52px); }
+
+.account-directory h2 {
+  margin-bottom: 15px;
+  font-family: var(--account-serif);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 1.12;
+  letter-spacing: -.04em;
+}
+
+.account-shortcuts {
+  display: grid;
+  border-top: 1px solid var(--account-line);
+}
+
+.account-shortcut,
+.account-atelier {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 4px;
+  color: var(--account-brand);
+}
+
+.account-shortcut {
+  border-bottom: 1px solid var(--account-line);
+}
+
+.account-shortcut:hover { background: var(--account-soft); }
+.account-layout .account-shortcut:focus-visible { outline-offset: -2px; }
+
+.account-shortcut h3,
+.account-atelier h3 {
+  color: var(--account-ink);
+  font-size: .9375rem;
+  font-weight: 600;
+}
+
+.account-shortcut p,
+.account-atelier p {
+  margin-top: 3px;
+  color: var(--account-muted);
+  font-size: .8125rem;
+  line-height: 1.55;
+}
+
+.account-atelier {
+  padding-block: 17px;
+  border-bottom: 1px solid var(--account-line);
+}
+
+.account-atelier > span {
+  align-self: start;
+  font-size: .75rem;
+  font-weight: 550;
+}
+
+.account-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 10px 18px;
+  border: 1px solid var(--account-line);
+  border-radius: 3px;
+  color: var(--account-brand);
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.account-button:not(:disabled):hover { background: var(--account-soft); }
+.account-button:disabled { cursor: not-allowed; opacity: .56; }
+
+.account-button-primary {
+  background: var(--account-brand);
+  border-color: var(--account-brand);
+  color: white;
+}
+.account-button-primary:not(:disabled):hover { background: #432033; }
+
+@media (min-width: 560px) {
+  .account-cover {
+    grid-template-columns: minmax(0, 1fr) minmax(0, .95fr);
+    min-height: clamp(238px, 24vw, 320px);
+  }
+
+  .account-shortcuts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(20px, 3vw, 36px);
+  }
+
+  .account-shortcuts li { display: grid; }
+  .account-shortcut { padding-block: 20px; }
+}
+
+@media (min-width: 1024px) {
+  .account-frame:has(.account-editorial) {
+    padding-top: clamp(34px, 4vw, 58px);
+  }
+
+  .account-grid:has(.account-editorial) {
+    grid-template-columns: clamp(208px, 18vw, 240px) minmax(0, 1fr);
+    column-gap: clamp(30px, 4vw, 64px);
+  }
+}
+
+@media (min-width: 1024px) and (min-height: 740px) {
+  .account-grid:has(.account-editorial) .account-nav-sidebar {
+    position: sticky;
+    top: 112px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .account-enter { animation: account-arrive 340ms var(--account-ease) both; }
+
+  @keyframes account-arrive {
+    from { transform: translateY(7px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .account-shortcut > svg:last-child,
+    .account-button { transition: transform 160ms var(--account-ease); }
+    .account-shortcut:hover > svg:last-child { transform: translate(2px, -2px); }
+    .account-button:active:not(:disabled):not(:focus-visible) { transform: scale(.985); }
+  }
+}
