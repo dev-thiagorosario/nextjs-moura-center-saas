@@ -16,7 +16,7 @@ type HeaderActionsProps = {
 
 export function HeaderActions({ items }: HeaderActionsProps) {
   return (
-    <div className="col-start-3 row-start-1 flex shrink-0 items-center justify-self-end text-[#d5cfd2] sm:gap-2 lg:gap-4 xl:gap-6">
+    <div className="shop-header-actions col-start-3 row-start-1 flex shrink-0 items-center justify-self-end text-[#d5cfd2] sm:gap-2 lg:gap-4 xl:gap-6">
       {items.map(({ label, icon: Icon, count, href, onClick }) => href ? (
         <Link
           key={label}

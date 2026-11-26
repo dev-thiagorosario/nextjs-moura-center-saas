@@ -1,0 +1,59 @@
+.moura-about .about-container {
+  width: 100%;
+  max-width: 90rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.moura-about .about-section-title {
+  font-size: clamp(1.75rem, 3.5vw, 3.375rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.moura-about .about-body-copy {
+  color: var(--shop-muted);
+  line-height: 1.65;
+}
+
+@media (min-width: 40rem) {
+  .moura-about .about-container { padding-inline: 1.5rem; }
+}
+
+@media (min-width: 64rem) {
+  .moura-about .about-container { padding-inline: 2.5rem; }
+}
+
+@media (min-width: 80rem) {
+  .moura-about .about-container { padding-inline: 4rem; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .moura-about .about-hero-copy {
+    animation: moura-about-arrive 500ms ease-out both;
+  }
+
+  .moura-about .about-hero-image {
+    animation: moura-about-settle 850ms ease-out both;
+  }
+
+  @supports (animation-timeline: view()) {
+    .moura-about .about-reveal-image {
+      animation: moura-about-arrive linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+@keyframes moura-about-arrive {
+  from { opacity: 0.75; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes moura-about-settle {
+  from { transform: scale(1.035); }
+  to { transform: scale(1); }
+}

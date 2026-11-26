@@ -1,193 +1,112 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Star } from "lucide-react";
 import Image from "next/image";
-import { ArrowRight, Check, ChevronLeft, ChevronRight, Heart, ShoppingBag, Star } from "lucide-react";
-import { productCollections, type Product, type ProductCollection } from "../_data/products";
+import Link from "next/link";
+import { categoryGroups, productCategories } from "../_data/categories";
+import type { Product, ProductCollection } from "../_data/products";
+import { BagButton, FavoriteButton } from "./product-actions";
+import { ShelfTabs } from "./shelf-tabs";
 
-const currency = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-});
+const shelfLabels: Record<string, string> = { novidades: "Novidades", kits: "Kits" };
+
+const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 
 function ProductCard({ product }: { product: Product }) {
-  const [favorite, setFavorite] = useState(false);
-  const [added, setAdded] = useState(false);
-
   return (
-    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-lg border border-[#ecdfe4] bg-white transition-shadow hover:shadow-[0_8px_24px_-12px_#67394b50]">
-      <div className="relative aspect-[4/5] overflow-hidden bg-[#f1e8ec] sm:aspect-[4/5]">
-        <Image
-          src={product.image}
-          alt={product.imageAlt}
-          fill
-          sizes="(min-width: 1440px) 205px, (min-width: 1280px) 16vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.025] motion-reduce:transform-none motion-reduce:transition-none"
-        />
-        {product.badge && (
-          <span className="absolute top-3 left-3 max-w-[calc(100%-4rem)] rounded-full bg-[#fffafb]/95 px-2 py-1 text-[9px] font-semibold tracking-wide text-[#963752] sm:px-3 sm:text-[10px]">
-            {product.badge}
-          </span>
-        )}
-        <button
-          type="button"
-          aria-label={`${favorite ? "Remover" : "Adicionar"} ${product.name} ${favorite ? "dos" : "aos"} favoritos`}
-          aria-pressed={favorite}
-          onClick={() => setFavorite(!favorite)}
-          className="absolute top-1 right-1 flex size-11 items-center justify-center rounded-full text-[#98415e] outline-offset-2 transition-colors hover:text-[#b74368] focus-visible:outline-2 focus-visible:outline-[#b74368]"
-        >
-          <span className="flex size-8 items-center justify-center rounded-full bg-white/95 shadow-sm">
-            <Heart className={`size-[18px] ${favorite ? "fill-current" : ""}`} strokeWidth={1.6} aria-hidden="true" />
-          </span>
-        </button>
+    <article className="home-product">
+      <div className="home-photo home-product-photo">
+        <Image src={product.image} alt={product.imageAlt} fill sizes="(min-width: 1600px) 350px, (min-width: 1024px) 23vw, 45vw" />
+        {product.badge && <span className="home-badge">{product.badge}</span>}
+        <FavoriteButton name={product.name} />
       </div>
-
-      <div className="flex flex-1 flex-col p-3 sm:p-4">
-        <h3 className="min-h-10 text-xs leading-5 font-medium text-[#30242a] sm:text-sm">{product.name}</h3>
-        <div className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-1" aria-label={`Avaliação ${product.rating.toLocaleString("pt-BR")} de 5, com ${product.reviews} avaliações`}>
-          <span className="flex gap-0.5 text-[#e6a23b]" aria-hidden="true">
-            {Array.from({ length: 5 }, (_, index) => <Star key={index} className="size-3 fill-current sm:size-3.5" strokeWidth={0} />)}
-          </span>
-          <span className="text-[10px] text-[#806c75]" aria-hidden="true">{product.rating.toLocaleString("pt-BR")} ({product.reviews})</span>
+      <div className="home-product-copy">
+        <h3>{product.name}</h3>
+        <div className="home-rating">
+          <Star size={13} fill="currentColor" aria-hidden="true" />
+          <span className="sr-only">Avaliação de </span>
+          {product.rating.toLocaleString("pt-BR")}
+          <span className="sr-only"> de 5, com </span>
+          <span>({product.reviews})</span>
+          <span className="sr-only"> avaliações</span>
         </div>
-        <div className="mt-auto pt-3">
-          <div className="min-h-4 text-[10px] text-[#74616a] sm:text-xs">
-            {product.originalPrice && <del>{currency.format(product.originalPrice)}</del>}
-          </div>
-          <p className="text-base font-bold tracking-tight text-[#30242a] sm:text-lg">{currency.format(product.price)}</p>
-          <p className="mt-0.5 text-[10px] text-[#806c75] sm:text-xs">ou 3x de {currency.format(product.price / 3)}</p>
-          <button
-            type="button"
-            onClick={() => setAdded(!added)}
-            aria-pressed={added}
-            aria-label={`${added ? "Remover" : "Adicionar"} ${product.name} ${added ? "da" : "à"} sacola de demonstração`}
-            className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[#a7365b] px-2 py-2 text-xs font-medium text-white transition-colors hover:bg-[#963752] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b74368] sm:text-sm"
-          >
-            {added ? <Check className="size-4 shrink-0" aria-hidden="true" /> : <ShoppingBag className="size-4 shrink-0" strokeWidth={1.6} aria-hidden="true" />}
-            {added ? "Adicionado" : "Adicionar"}
-          </button>
-          <span role="status" className="sr-only">{added ? `${product.name} adicionado à sacola de demonstração.` : ""}</span>
+        <div className="home-product-prices">
+          <strong>{currency.format(product.price)}</strong>
+          {product.originalPrice && <del>{currency.format(product.originalPrice)}</del>}
         </div>
+        <p className="home-installments">ou 3x de {currency.format(product.price / 3)}</p>
+        <BagButton name={product.name} />
       </div>
     </article>
   );
 }
 
-type ProductGridProps = {
-  collections?: ProductCollection[];
-};
-
-function ProductRow({ collection }: { collection: ProductCollection }) {
-  const trackRef = useRef<HTMLUListElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-  const trackId = `${collection.id}-products`;
-  const mobileRows = [
-    collection.products.filter((_, index) => index % 2 === 0),
-    collection.products.filter((_, index) => index % 2 !== 0),
-  ];
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    function updateControls() {
-      if (!track) return;
-      setCanScrollLeft(track.scrollLeft > 1);
-      setCanScrollRight(track.scrollLeft + track.clientWidth < track.scrollWidth - 1);
-    }
-
-    updateControls();
-    const observer = new ResizeObserver(updateControls);
-    observer.observe(track);
-    track.addEventListener("scroll", updateControls, { passive: true });
-    return () => {
-      observer.disconnect();
-      track.removeEventListener("scroll", updateControls);
-    };
-  }, [collection.products]);
-
-  function scroll(direction: number) {
-    const track = trackRef.current;
-    if (!track) return;
-    const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
-    track.scrollBy({
-      left: direction * (track.clientWidth + gap),
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
-    });
-  }
-
+function ProductList({ products }: { products: Product[] }) {
   return (
-    <section aria-labelledby={`${collection.id}-title`} className="mx-auto max-w-[1440px] px-4 py-8 sm:px-6 sm:py-12 lg:px-10 xl:px-16">
-      <div className="mb-5 sm:mb-6">
-        <div className="flex items-center gap-4 sm:gap-6">
-          <h2 id={`${collection.id}-title`} className="shrink-0 text-2xl font-medium tracking-tight sm:text-3xl">{collection.title}</h2>
-          <span aria-hidden="true" className="h-px flex-1 bg-[#d9c4cd]" />
-          <button
-            type="button"
-            aria-disabled="true"
-            aria-label={`Ver mais produtos de ${collection.title} (em breve)`}
-            className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-sm text-xs font-medium text-[#a15470] transition-colors hover:text-[#79364e] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b74368] sm:text-sm"
-          >
-            Ver mais
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </button>
-        </div>
-        <p className="mt-2 text-xs leading-relaxed text-[#806c75] sm:text-sm">{collection.description}</p>
-      </div>
-      <div className="relative">
-        <div className="space-y-3 sm:hidden">
-          {mobileRows.map((products, rowIndex) => (
-            <ul
-              key={rowIndex}
-              tabIndex={0}
-              aria-label={`${collection.title}, fileira ${rowIndex + 1}`}
-              className="grid snap-x snap-mandatory auto-cols-[calc((100%-0.75rem)/2)] grid-flow-col gap-3 overflow-x-auto overscroll-x-contain rounded-xl py-2 [scrollbar-width:none] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b74368] [&::-webkit-scrollbar]:hidden"
-            >
-              {products.map((product) => (
-                <li key={product.id} className="min-w-0 snap-start"><ProductCard product={product} /></li>
-              ))}
-            </ul>
-          ))}
-        </div>
-        <ul
-          ref={trackRef}
-          id={trackId}
-          tabIndex={0}
-          aria-label={`Produtos de ${collection.title}`}
-          className="hidden snap-x snap-mandatory grid-flow-col gap-3 overflow-x-auto overscroll-x-contain rounded-xl py-2 [scrollbar-width:none] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b74368] sm:grid sm:auto-cols-[calc((100%-2rem)/3)] sm:gap-4 lg:auto-cols-[calc((100%-3rem)/4)] xl:auto-cols-[calc((100%-5rem)/6)] [&::-webkit-scrollbar]:hidden"
-        >
-          {collection.products.map((product) => (
-            <li key={product.id} className="min-w-0 snap-start"><ProductCard product={product} /></li>
-          ))}
-        </ul>
-        {[
-          { direction: -1, label: "anteriores", enabled: canScrollLeft, Icon: ChevronLeft },
-          { direction: 1, label: "seguintes", enabled: canScrollRight, Icon: ChevronRight },
-        ].map(({ direction, label, enabled, Icon }) => (
-          <button
-            key={direction}
-            type="button"
-            aria-label={`Ver produtos ${label} de ${collection.title}`}
-            aria-controls={trackId}
-            disabled={!enabled}
-            onClick={() => scroll(direction)}
-            className={`absolute top-1/2 z-10 hidden size-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#e2bdcb] bg-white text-[#b74368] shadow-md transition-colors hover:bg-[#f9e9ef] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#b74368] disabled:cursor-default disabled:text-[#c8b6be] disabled:shadow-none sm:flex ${direction === -1 ? "-left-5" : "-right-5"}`}
-          >
-            <Icon className="size-5" aria-hidden="true" />
-          </button>
-        ))}
-      </div>
-    </section>
+    <ul className="home-product-grid">
+      {products.map((product) => <li key={product.id}><ProductCard product={product} /></li>)}
+    </ul>
   );
 }
 
-export function ProductGrid({ collections = productCollections }: ProductGridProps) {
+function Products({ collection }: { collection: ProductCollection }) {
+  const firstProducts = collection.products.slice(0, 4);
+  const remainingProducts = collection.products.slice(4);
+
   return (
-    <div className="bg-[#fffafb] pb-8 text-[#211b1e] sm:pb-12">
-      {collections.map((collection) => (
-        <ProductRow key={collection.id} collection={collection} />
-      ))}
-    </div>
+    <>
+      <p className="home-shelf-description">{collection.description}</p>
+      <ProductList products={firstProducts} />
+      {remainingProducts.length > 0 && (
+        <details className="home-more">
+          <summary className="home-text-link">
+            <span className="home-more-open">Ver mais produtos</span>
+            <span className="home-more-close">Ver menos produtos</span>
+            <span className="sr-only"> da seção {collection.title}</span>
+            <ChevronDown size={16} aria-hidden="true" />
+          </summary>
+          <ProductList products={remainingProducts} />
+        </details>
+      )}
+    </>
+  );
+}
+
+export function ProductGrid({ collections, category }: { collections: ProductCollection[]; category?: string }) {
+  const selected = productCategories.find(({ slug }) => slug === category);
+  const group = category && Object.hasOwn(categoryGroups, category)
+    ? category as keyof typeof categoryGroups
+    : undefined;
+  const label = selected?.label ?? (group && categoryGroups[group]);
+
+  if (label) {
+    const groupCategories = productCategories.filter((entry) => entry.group === group);
+    const products = collections.flatMap((collection) => collection.products).filter((product) =>
+      product.categories.some((slug) => slug === selected?.slug || slug === group ||
+        groupCategories.some((entry) => entry.slug === slug)),
+    );
+
+    return (
+      <section className="home-wrap home-section home-shelf" id="vitrine" aria-labelledby="shelf-title">
+        <div className="home-section-heading">
+          <h2 id="shelf-title">{label}</h2>
+          <Link href="/#vitrine" className="home-text-link">Ver toda a vitrine</Link>
+        </div>
+        {products.length ? <ProductList products={products} /> : (
+          <p className="home-shelf-description">Ainda não temos produtos nesta categoria.</p>
+        )}
+      </section>
+    );
+  }
+
+  return (
+    <section className="home-wrap home-section home-shelf" id="vitrine" aria-labelledby="shelf-title">
+      <div className="home-section-heading" data-home-reveal>
+        <h2 id="shelf-title">A vitrine Moura</h2>
+      </div>
+      <ShelfTabs shelves={collections.map((collection) => ({
+        id: collection.id,
+        label: shelfLabels[collection.id] ?? collection.title,
+        content: <Products collection={collection} />,
+      }))} />
+    </section>
   );
 }
