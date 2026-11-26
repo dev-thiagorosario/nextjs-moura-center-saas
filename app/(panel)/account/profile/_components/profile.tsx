@@ -8,27 +8,25 @@ export default function Profile({ user }: { user: UserProfile }) {
   const image = user.image && /^(https:\/\/|data:image\/(?:jpeg|png|webp);base64,)/.test(user.image) ? user.image : null;
 
   return (
-    <div className="max-w-[860px]">
-      <header className="mb-8 border-b border-[#ecdfe4] pb-8 sm:mb-10 sm:pb-10">
-        <h1 className="text-3xl font-medium tracking-tight sm:text-4xl">Meu perfil</h1>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-[#74616a] sm:text-base">Cuide das suas informações pessoais e mantenha seus dados atualizados na Moura Center.</p>
+    <div className="account-editorial account-enter">
+      <header className="account-profile-header">
+        <p className="account-eyebrow">Minha conta</p>
+        <h1 className="account-title">Meu <em>perfil.</em></h1>
+        <p className="account-lead">Atualize seus dados pessoais e gerencie sua senha de acesso.</p>
       </header>
 
-      <section aria-label="Resumo do perfil" className="mb-8 flex flex-col gap-5 rounded-lg border border-[#ecdfe4] bg-[#f8e9ef] p-5 sm:flex-row sm:items-center sm:p-6">
-        <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#e9c4d1] bg-white text-xl font-medium text-[#92304f]">
-          {image ? <Image src={image} alt="Foto do perfil" fill sizes="64px" unoptimized referrerPolicy="no-referrer" className="object-cover" />
-            : initials || <UserRound className="size-7" strokeWidth={1.5} aria-hidden="true" />}
+      <ProfileForm name={user.name} phone={user.phone} email={user.email} hasPassword={user.hasPassword} identity={
+        <div className="account-profile-identity">
+          <div className="account-profile-avatar" aria-hidden="true">
+            {image ? <Image src={image} alt="" fill sizes="88px" unoptimized referrerPolicy="no-referrer" className="object-cover" />
+              : initials || <UserRound size={28} strokeWidth={1.5} />}
+          </div>
+          <div className="account-profile-identity-text">
+            <h2>{user.name?.trim() || "Sua conta Moura Center"}</h2>
+            {user.email && <p>{user.email}</p>}
+          </div>
         </div>
-        <div className="min-w-0">
-          <h2 className="break-words text-lg font-medium tracking-tight">{user.name || "Sua conta Moura Center"}</h2>
-          <p className="mt-1 break-all text-sm leading-6 text-[#74616a]">{user.email || "E-mail não informado"}</p>
-        </div>
-      </section>
-
-      <section aria-label="Editar perfil" className="rounded-lg border border-[#ecdfe4] bg-white p-5 sm:p-8">
-        <ProfileForm name={user.name} phone={user.phone} email={user.email} hasPassword={user.hasPassword} />
-      </section>
-
+      } />
     </div>
   );
 }

@@ -45,7 +45,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-export async function Footer() {
+export async function Footer({ editorial = false }: { editorial?: boolean }) {
   "use cache";
   return (
     <footer className="mt-auto border-t border-[#b96a83]/40 bg-[#100d0f] text-[#d5cfd2]">
@@ -69,7 +69,7 @@ export async function Footer() {
               {navigation.map(({ label, href }) => (
                 <li key={label}>
                   <Link
-                    href={href}
+                    href={editorial && label === "Sobre Nós" ? "/about-us" : href}
                     className="inline-flex min-h-11 items-center rounded-sm text-sm transition-colors hover:text-[#df92ae] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#df92ae]"
                   >
                     {label}

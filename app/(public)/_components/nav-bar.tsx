@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { getCurrentUser } from "@/lib/data-access/current-user";
 
-const navigation = [
+export const shopNavigation = [
   { label: "Moda Fitness", href: "/?categoria=moda-fitness" },
   { label: "Moda Praia", href: "/?categoria=moda-praia" },
   { label: "Cosméticos", href: "/?categoria=cosmeticos" },
@@ -20,7 +20,7 @@ function NavBarContent({ showAtelier = false }: { showAtelier?: boolean }) {
     >
       <div className="mx-auto w-full max-w-[1440px] sm:px-6 lg:px-10 xl:px-16">
         <ul className={showAtelier ? "grid grid-cols-5" : "grid grid-cols-4"}>
-          {navigation.map(({ label, href }) => (
+          {shopNavigation.map(({ label, href }) => (
             <li
               key={href}
               className="relative min-w-0 after:absolute after:top-1/2 after:right-0 after:h-4 after:w-px after:-translate-y-1/2 after:bg-[#875563]/15 last:after:hidden"

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "./profile.css";
 import Profile from "./_components/profile";
 import { getUserData } from "./_data-access/get-info-user";
 
