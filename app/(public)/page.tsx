@@ -6,7 +6,8 @@ import { Header } from "./_components/header";
 import { NavBar } from "./_components/nav-bar";
 import { Hero } from "./_components/hero";
 import { Categories } from "./_components/categories";
-import { EditorialFeature } from "./_components/editorial-feature";
+import { AtelierFeature } from "./_components/atelier-feature";
+import { IntroAnimation } from "./_components/intro-animation";
 import { HomeReveals } from "./_components/home-reveals";
 import { Footer } from "./_components/footer";
 import { ProductGrid } from "./_components/product-grid";
@@ -38,9 +39,10 @@ export default function Home({ searchParams }: PageProps<"/">) {
         <Suspense fallback={<ProductGrid collections={productCollections} />}>
           <HomeShelf searchParams={searchParams} />
         </Suspense>
-        <EditorialFeature />
+        <AtelierFeature />
       </main>
       <Footer editorial />
+      <IntroAnimation />
       <HomeReveals />
     </div>
   );

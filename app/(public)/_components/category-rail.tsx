@@ -10,6 +10,19 @@ export function CategoryRail({ children }: { children: ReactNode }) {
   useEffect(() => {
     const list = rail.current;
     if (!list) return;
+
+    function scrollWithWheel(event: WheelEvent) {
+      if (!list || !event.cancelable || event.ctrlKey || event.shiftKey ||
+          Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+
+      const max = list.scrollWidth - list.clientWidth;
+      const current = list.scrollLeft;
+      if (event.deltaY > 0 ? current >= max - 0.5 : current <= 0.5) return;
+
+      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? list.clientWidth : 1;
+      event.preventDefault();
+      list.scrollBy({ left: event.deltaY * unit, behavior: "instant" });
+    }
     function update() {
       if (!list) return;
       const start = list.scrollLeft <= 1;
@@ -20,10 +33,12 @@ export function CategoryRail({ children }: { children: ReactNode }) {
     const resize = new ResizeObserver(update);
     resize.observe(list);
     list.addEventListener("scroll", update, { passive: true });
+    list.addEventListener("wheel", scrollWithWheel, { passive: false });
     update();
     return () => {
       resize.disconnect();
       list.removeEventListener("scroll", update);
+      list.removeEventListener("wheel", scrollWithWheel);
     };
   }, []);
 

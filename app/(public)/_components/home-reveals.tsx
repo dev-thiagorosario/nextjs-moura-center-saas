@@ -2,41 +2,37 @@
 
 import { useEffect } from "react";
 
-let introduced = false;
-
-function playIntro() {
-  if (introduced) return;
-  introduced = true;
-
-  try {
-    if (sessionStorage.getItem("moura-home-intro")) return;
-    sessionStorage.setItem("moura-home-intro", "seen");
-  } catch {
-    // The module flag still prevents replay if storage is unavailable.
-  }
-
-  if (!window.location.hash && window.scrollY === 0) {
-    document.querySelector(".moura-home")?.classList.add("home-intro");
-  }
-}
-
 export function HomeReveals() {
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const main = document.getElementById("home-content");
+    if (!main || typeof IntersectionObserver === "undefined") return;
 
-    playIntro();
-    if (!("IntersectionObserver" in window)) return;
-
+    const observed = new WeakSet<Element>();
     const observer = new IntersectionObserver((entries) => {
-      for (const { isIntersecting, target } of entries) {
+      for (const { isIntersecting, target, boundingClientRect } of entries) {
         if (!isIntersecting) continue;
-        target.classList.add("home-revealed");
+        if (boundingClientRect.top > 32) target.classList.add("home-revealed");
         observer.unobserve(target);
       }
     }, { threshold: 0.12 });
 
-    document.querySelectorAll("#home-content [data-home-reveal]").forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
+    function observeSections() {
+      main?.querySelectorAll("[data-home-reveal]").forEach((element) => {
+        if (observed.has(element)) return;
+        observed.add(element);
+        observer.observe(element);
+      });
+    }
+
+    // The product shelf may arrive after the initial Home has hydrated.
+    const stream = new MutationObserver(observeSections);
+    stream.observe(main, { childList: true, subtree: true });
+    observeSections();
+    return () => {
+      stream.disconnect();
+      observer.disconnect();
+    };
   }, []);
 
   return null;

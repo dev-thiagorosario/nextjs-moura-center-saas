@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 import { loginProviders } from "@/lib/auth";
 import { getAccountDestination, getCurrentUser } from "@/lib/data-access/current-user";
+import logo from "../_assets/logo-wordmark-light.png";
 import { Login } from "./_components/login";
 import { SocialLogin } from "./_components/social-login";
 import "@/components/storefront.css";
@@ -25,49 +26,66 @@ async function LoginContent({ searchParams }: PageProps<"/login">) {
     : "Não foi possível entrar. Tente novamente.";
 
   return (
-    <section aria-labelledby="login-title" className="moura-login-content">
-      <span className="moura-login-brand">Moura Center</span>
-      <h1 id="login-title">Entre na sua conta</h1>
-      <p className="moura-login-description">
-        Acompanhe seus pedidos, reveja seus favoritos e gerencie seu perfil.
-      </p>
-
-      <div className="mt-8 grid gap-5">
-        {error && (
-          <p role="alert" className="rounded-md bg-[#fff0f4] p-3 text-sm text-[#862744]">
-            {errorMessage}
-          </p>
-        )}
-        <Login />
-        <div className="moura-login-divider">ou</div>
-        <SocialLogin providers={loginProviders} />
-      </div>
-    </section>
+    <div className="moura-login-methods">
+      {error && <p role="alert" className="moura-login-alert">{errorMessage}</p>}
+      <Login />
+      <div className="moura-login-divider">ou</div>
+      <SocialLogin providers={loginProviders} />
+    </div>
   );
 }
 
 export default function LoginPage(props: PageProps<"/login">) {
+  const { props: campaign } = getImageProps({
+    src: "/images/hero/campanha-moura-mobile.webp",
+    alt: "",
+    width: 790,
+    height: 1024,
+    sizes: "(min-width: 1500px) 740px, 53vw",
+  });
+  const { props: landscape } = getImageProps({
+    src: "/images/hero/campanha-moura.webp",
+    alt: "",
+    width: 1536,
+    height: 1024,
+    sizes: "94vw",
+  });
+
   return (
     <main className="storefront moura-login-page" lang="pt-BR">
+      <header className="moura-login-header">
+        <Link href="/" className="moura-login-back">
+          <ArrowLeft size={17} strokeWidth={1.5} aria-hidden="true" />
+          Voltar à loja
+        </Link>
+        <Link href="/" className="moura-login-wordmark" aria-label="Moura Center — página inicial">
+          <Image src={logo} alt="" sizes="260px" />
+        </Link>
+      </header>
       <div className="moura-login-shell">
-        <div className="moura-login-access">
-          <Link href="/" className="moura-login-back">
-            <ArrowLeft size={17} aria-hidden="true" />
-            Voltar à loja
-          </Link>
-          <Suspense fallback={<p className="moura-login-content" role="status">Carregando opções de acesso…</p>}>
+        <section aria-labelledby="login-title" className="moura-login-content">
+          <div className="moura-login-intro" data-enter>
+            <p className="moura-login-label">Minha conta</p>
+            <h1 id="login-title">Entre na <em>sua conta.</em></h1>
+            <p className="moura-login-description">
+              Acompanhe seus pedidos, reveja seus favoritos e gerencie seu perfil.
+            </p>
+          </div>
+          <Suspense fallback={<p className="moura-login-loading" role="status">Carregando opções de acesso…</p>}>
             <LoginContent {...props} />
           </Suspense>
-        </div>
-        <div className="moura-login-photo" aria-hidden="true">
-          <Image
-            src="/images/products/makeup.jpg"
-            alt=""
-            fill
-            sizes="(min-width: 1280px) 544px, (min-width: 900px) 46vw, 1px"
-            className="object-cover object-[70%_center]"
-          />
-        </div>
+        </section>
+        <figure className="moura-login-campaign" aria-hidden="true">
+          <picture>
+            <source media="(max-width: 799px)" srcSet={landscape.srcSet} sizes={landscape.sizes} />
+            {/* Next.js generates the sources for this art-directed picture. */}
+            <img {...campaign} alt="" />
+          </picture>
+          <figcaption className="moura-login-caption" data-enter>
+            <span className="moura-login-label">Coleção fitness</span>
+            <span>Vista o <em>seu ritmo.</em></span>
+          </figcaption>
+        </figure>
       </div>
     </main>
   );

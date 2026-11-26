@@ -9,7 +9,6 @@ type LoginProvider = {
   name: string;
 };
 
-const buttonClass = "flex min-h-12 w-full items-center justify-center gap-3 rounded-lg border border-[var(--shop-line)] bg-white px-4 py-3 text-sm font-semibold transition-colors";
 
 function GoogleIcon() {
   return (
@@ -31,7 +30,7 @@ function ProviderButton({ id, name }: LoginProvider) {
       name="provider"
       value={id}
       disabled={pending}
-      className={`${buttonClass} cursor-pointer hover:border-[var(--shop-brand)] hover:bg-[#fff4f7] disabled:cursor-wait disabled:opacity-60`}
+      className="moura-login-provider"
     >
       {id === "google" && <GoogleIcon />}
       {pending && data?.get("provider") === id ? `Conectando com ${name}…` : `Continuar com ${name}`}
@@ -44,20 +43,20 @@ export function SocialLogin({ providers }: { providers: LoginProvider[] }) {
   const showGooglePreview = !providers.some(({ id }) => id === "google");
 
   return (
-    <div className="grid gap-3">
+    <div className="moura-login-providers">
       {showGooglePreview && (
         <div className="grid gap-2">
-          <button type="button" disabled aria-describedby={previewId} className={`${buttonClass} cursor-not-allowed`}>
+          <button type="button" disabled aria-describedby={previewId} className="moura-login-provider">
             <GoogleIcon />
             Continuar com Google
           </button>
-          <p id={previewId} className="text-center text-sm text-[var(--shop-muted)]">
-            Prévia do botão. O acesso com Google ainda está indisponível.
+          <p id={previewId} className="moura-login-provider-note">
+            O acesso com Google ainda está indisponível.
           </p>
         </div>
       )}
       {providers.length > 0 && (
-        <form action={loginWithProvider} className="grid gap-3">
+        <form action={loginWithProvider} className="moura-login-providers">
           {providers.map((provider) => <ProviderButton key={provider.id} {...provider} />)}
         </form>
       )}

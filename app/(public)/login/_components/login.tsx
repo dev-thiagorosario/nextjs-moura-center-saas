@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Eye, EyeOff } from "lucide-react";
+import { ArrowUpRight, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { login } from "../_actions/login";
 import { loginSchema, type LoginValues } from "./login-schema";
@@ -37,9 +37,9 @@ export function Login() {
   });
 
   return (
-    <form method="post" onSubmit={submit} noValidate className="grid gap-5" aria-busy={isSubmitting}>
+    <form method="post" onSubmit={submit} noValidate className="moura-login-form" aria-busy={isSubmitting}>
       <div>
-        <label htmlFor={emailId} className="mb-2 block text-sm font-medium">E-mail</label>
+        <label htmlFor={emailId} className="moura-login-field-label">E-mail</label>
         <input
           {...register("email")}
           id={emailId}
@@ -51,16 +51,15 @@ export function Login() {
           required
           aria-invalid={Boolean(errors.email)}
           aria-describedby={errors.email ? `${emailId}-error` : undefined}
-          className="aria-invalid:border-[#a7365b]"
         />
         {errors.email && (
-          <p id={`${emailId}-error`} role="alert" className="mt-2 text-sm text-[#862744]">
+          <p id={`${emailId}-error`} role="alert" className="moura-login-field-error">
             {errors.email.message}
           </p>
         )}
       </div>
       <div>
-        <label htmlFor={passwordId} className="mb-2 block text-sm font-medium">Senha</label>
+        <label htmlFor={passwordId} className="moura-login-field-label">Senha</label>
         <div className="relative">
           <input
             {...register("password")}
@@ -70,7 +69,7 @@ export function Login() {
             required
             aria-invalid={Boolean(errors.password)}
             aria-describedby={errors.password ? `${passwordId}-error` : undefined}
-            className="pr-14! aria-invalid:border-[#a7365b]"
+            className="moura-login-password"
           />
           <Button
             type="button"
@@ -79,29 +78,29 @@ export function Login() {
             aria-label={visible ? "Ocultar senha" : "Mostrar senha"}
             aria-controls={passwordId}
             onClick={() => setVisible((current) => !current)}
-            className="absolute top-0.5 right-0.5 size-11 rounded-md text-[var(--shop-muted)] hover:bg-[#fff4f7]"
+            className="moura-login-visibility"
           >
             <VisibilityIcon aria-hidden="true" />
           </Button>
         </div>
         {errors.password && (
-          <p id={`${passwordId}-error`} role="alert" className="mt-2 text-sm text-[#862744]">
+          <p id={`${passwordId}-error`} role="alert" className="moura-login-field-error">
             {errors.password.message}
           </p>
         )}
       </div>
       {errors.root?.message && (
-        <p role="alert" className="rounded-md bg-[#fff0f4] p-3 text-sm text-[#862744]">
+        <p role="alert" className="moura-login-alert">
           {errors.root.message}
         </p>
       )}
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="h-12 w-full cursor-pointer rounded-lg bg-[var(--shop-brand)] text-white transition-colors hover:bg-[#862744] disabled:cursor-wait"
+        className="moura-login-submit"
       >
         {isSubmitting ? "Entrando…" : "Entrar"}
-        <ArrowRight aria-hidden="true" />
+        <ArrowUpRight size={17} aria-hidden="true" />
       </Button>
     </form>
   );

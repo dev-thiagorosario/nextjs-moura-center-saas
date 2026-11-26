@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Heart, Plus } from "lucide-react";
+import { Check, Heart, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 
 export function FavoriteButton({ name }: { name: string }) {
@@ -21,7 +21,7 @@ export function FavoriteButton({ name }: { name: string }) {
 
 export function BagButton({ name }: { name: string }) {
   const [added, setAdded] = useState(false);
-  const Icon = added ? Check : Plus;
+  const Icon = added ? Check : ShoppingBag;
 
   return (
     <>
@@ -32,7 +32,8 @@ export function BagButton({ name }: { name: string }) {
         aria-label={`Adicionar ${name} à sacola de demonstração`}
         onClick={() => setAdded((current) => !current)}
       >
-        {added ? "Adicionado" : "Adicionar"} <Icon size={16} aria-hidden="true" />
+        <Icon size={16} aria-hidden="true" />
+        {added ? "Adicionado" : "Adicionar à sacola"}
       </button>
       <span role="status" className="sr-only">
         {added ? `${name} adicionado à sacola de demonstração.` : ""}
