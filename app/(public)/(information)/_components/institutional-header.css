@@ -1,0 +1,163 @@
+.institutional-header,
+.institutional-menu[data-slot="sheet-content"] {
+  --institutional-paper: #fcfaf8;
+  --institutional-ink: #231c20;
+  --institutional-accent: #552339;
+  --institutional-line: #ded2cc;
+  --institutional-ease: cubic-bezier(.2, .75, .3, 1);
+  color: var(--institutional-ink);
+  background: var(--institutional-paper);
+}
+
+.institutional-header > :is(header, nav) {
+  position: relative;
+  background: transparent;
+  color: inherit;
+  border-color: var(--institutional-line);
+}
+
+.institutional-header > header {
+  z-index: 5;
+  background: var(--institutional-paper);
+}
+
+.institutional-header > header > div {
+  padding-inline: clamp(12px, 4.5vw, 64px);
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+
+.institutional-header .shop-wordmark {
+  justify-self: center;
+}
+
+.institutional-header .shop-wordmark img {
+  top: 50%;
+  transform: translateY(-50%);
+  mix-blend-mode: multiply;
+  filter: none;
+}
+
+.institutional-header .shop-header-actions,
+.institutional-header .shop-menu-trigger button {
+  gap: 0;
+  color: var(--institutional-ink);
+}
+
+.institutional-header .shop-header-actions :is(a, button) { color: inherit; }
+.institutional-header .shop-header-actions svg { width: 20px; height: 20px; }
+.institutional-header .shop-header-actions button span { background: var(--institutional-accent); }
+
+.institutional-header header [role="search"] {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--institutional-line);
+  border-radius: 0;
+  box-shadow: none;
+  color: var(--institutional-ink);
+}
+
+.institutional-header #header-search {
+  min-height: 0;
+  padding: 0 44px 0 4px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-size: 16px;
+}
+
+.institutional-header [role="search"]:focus-within {
+  border-color: var(--institutional-accent);
+  box-shadow: 0 1px var(--institutional-accent);
+}
+
+.institutional-header #header-search:focus-visible { outline: none; }
+
+.institutional-header header [role="search"] button { min-width: 44px; }
+.institutional-header header [role="search"] svg { width: 18px; height: 18px; }
+
+.institutional-header > nav ul { max-width: 800px; margin-inline: auto; }
+.institutional-header > nav li::after { display: none; }
+.institutional-header > nav li > :is(a, span) { letter-spacing: 0; }
+
+.institutional-header :is(a, button):hover,
+.institutional-menu nav a:hover {
+  color: var(--institutional-accent);
+}
+
+.institutional-header > nav a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.institutional-header :is(a, button):focus-visible,
+.institutional-menu :is(a, button):focus-visible {
+  outline: 2px solid var(--institutional-accent);
+  outline-offset: 2px;
+}
+
+.institutional-header > nav a:focus-visible { outline-offset: -3px; }
+.institutional-header .shop-header-actions a span { max-width: 110px; }
+
+.institutional-menu[data-slot="sheet-content"] {
+  max-width: min(88vw, 380px);
+  border-color: var(--institutional-line);
+}
+
+.institutional-menu [data-slot="sheet-title"] { color: inherit; }
+.institutional-menu [data-slot="sheet-description"] { color: #605457; }
+.institutional-menu [data-slot="sheet-close"]:is(button) { min-width: 44px; min-height: 44px; }
+
+.institutional-menu nav {
+  display: grid;
+  overflow-y: auto;
+  padding-bottom: 16px;
+}
+
+.institutional-menu nav a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--institutional-line);
+  border-radius: 0;
+}
+
+.institutional-menu nav a:hover { background: #f2e7e3; }
+
+@media (max-width: 40rem) {
+  .institutional-header > header > div:has(.shop-header-actions > :nth-child(3)) {
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+  }
+
+  .institutional-header header:has(.shop-header-actions > :nth-child(3)) .shop-wordmark {
+    width: min(100%, 130px);
+  }
+}
+
+@media (min-width: 64rem) {
+  .institutional-header header [role="search"] { max-width: 500px; }
+  .institutional-header .shop-header-actions { gap: 8px; }
+  .institutional-header > nav a { font-size: .85rem; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .institutional-header header :is(.shop-header-actions, .shop-menu-trigger) :is(a, button) {
+    transition: color 160ms var(--institutional-ease), transform 160ms var(--institutional-ease);
+  }
+
+  .institutional-header header :is(.shop-header-actions, .shop-menu-trigger) :is(a, button):active:not(:focus-visible) {
+    transform: scale(.96);
+  }
+
+  .institutional-menu[data-slot="sheet-content"] {
+    transition: opacity 170ms var(--institutional-ease), translate 230ms var(--institutional-ease);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .institutional-menu[data-slot="sheet-content"],
+  [data-slot="sheet-overlay"]:has(~ .institutional-menu),
+  .institutional-menu :is(a, button) {
+    transition: none;
+  }
+}

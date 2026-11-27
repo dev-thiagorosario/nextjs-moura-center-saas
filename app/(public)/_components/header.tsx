@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { getCurrentUser } from "@/lib/data-access/current-user";
+import logoWordmarkLight from "../_assets/logo-wordmark-light.png";
 import logoWordmark from "../_assets/logo-wordmark-dark.png";
 import {
   Sheet,
@@ -14,19 +15,21 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { HeaderActions, type HeaderAction } from "./header-actions";
+import { shopNavigation } from "./nav-bar";
 
 const bag: HeaderAction = { label: "Sacola de compras, 0 itens", icon: ShoppingBag, count: 0 };
 
-async function MobileAccountLink() {
+async function MobileAccountLink({ showLogin }: { showLogin: boolean }) {
   const user = await getCurrentUser();
-  if (!user) return null;
+  if (!user && !showLogin) return null;
 
   return (
     <SheetClose
-      render={<Link href="/account" />}
+      nativeButton={false}
+      render={<Link href={user ? "/account" : "/login"} />}
       className="block break-words rounded-md px-3 py-3 hover:bg-muted focus-visible:outline-2 focus-visible:outline-[#d5809e]"
     >
-      {user.name?.trim() || "Minha conta"}
+      {user ? user.name?.trim() || "Minha conta" : "Entrar"}
     </SheetClose>
   );
 }
@@ -47,11 +50,11 @@ async function StorefrontActions() {
   return <HeaderActions items={items} />;
 }
 
-export function Header() {
+export function Header({ editorial = false, menuClassName }: { editorial?: boolean; menuClassName?: string }) {
   return (
     <header className="sticky top-0 isolate z-50 border-b border-[#b96a83]/40 bg-[#100d0f]">
       <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-x-1 gap-y-1 px-3 pt-1 pb-3 sm:px-6 lg:flex lg:h-[88px] lg:gap-8 lg:px-10 lg:py-0 xl:gap-16 xl:px-16">
-        <div className="col-start-1 row-start-1 justify-self-start lg:hidden">
+        <div className="shop-menu-trigger col-start-1 row-start-1 justify-self-start lg:hidden">
           <Sheet>
             <SheetTrigger
               aria-label="Abrir menu"
@@ -59,20 +62,26 @@ export function Header() {
             >
               <Menu className="size-6" strokeWidth={1.5} aria-hidden="true" />
             </SheetTrigger>
-            <SheetContent side="left">
+            <SheetContent side="left" className={menuClassName ?? (editorial ? "home-menu" : undefined)}>
               <SheetHeader>
                 <SheetTitle>Moura Center</SheetTitle>
                 <SheetDescription>Navegue pela nossa loja.</SheetDescription>
               </SheetHeader>
               <nav aria-label="Menu principal" className="px-4">
                 <SheetClose
+                  nativeButton={false}
                   render={<Link href="/" />}
                   className="block rounded-md px-3 py-3 hover:bg-muted focus-visible:outline-2 focus-visible:outline-[#d5809e]"
                 >
                   Página inicial
                 </SheetClose>
+                {editorial && shopNavigation.map(({ label, href }) => (
+                  <SheetClose key={href} nativeButton={false} render={<Link href={href} />}>
+                    {label}
+                  </SheetClose>
+                ))}
                 <Suspense>
-                  <MobileAccountLink />
+                  <MobileAccountLink showLogin={editorial} />
                 </Suspense>
               </nav>
             </SheetContent>
@@ -81,11 +90,11 @@ export function Header() {
         <Link
           href="/"
           aria-label="Moura Center — página inicial"
-          className="relative col-start-2 row-start-1 block h-[31px] w-[110px] shrink-0 overflow-hidden rounded-sm outline-offset-4 focus-visible:outline-2 focus-visible:outline-[#d5809e] min-[360px]:h-9 min-[360px]:w-[130px] lg:h-14 lg:w-[200px]"
+          className="shop-wordmark relative col-start-2 row-start-1 block h-[31px] w-[110px] shrink-0 overflow-hidden rounded-sm outline-offset-4 focus-visible:outline-2 focus-visible:outline-[#d5809e] min-[360px]:h-9 min-[360px]:w-[130px] lg:h-14 lg:w-[200px]"
         >
           {/* Blend the dark background of the cropped wordmark into the header. */}
           <Image
-            src={logoWordmark}
+            src={editorial ? logoWordmarkLight : logoWordmark}
             alt="Moura Center"
             preload
             sizes="(min-width: 1024px) 285px, (min-width: 360px) 186px, 157px"
@@ -105,7 +114,7 @@ export function Header() {
             id="header-search"
             type="search"
             name="q"
-            placeholder="Busque por produtos, marcas ou categorias"
+            placeholder={editorial ? "Buscar na loja" : "Busque por produtos, marcas ou categorias"}
             className="h-full min-w-0 flex-1 rounded-md bg-transparent pr-10 pl-3 text-[11px] outline-none placeholder:text-[#777277] sm:text-sm lg:pr-12 lg:pl-4 [&::-webkit-search-cancel-button]:appearance-none"
           />
           <button

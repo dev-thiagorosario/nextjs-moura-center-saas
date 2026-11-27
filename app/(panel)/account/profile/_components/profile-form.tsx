@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState, useTransition, type FormEvent } from "react";
-import { Check, LoaderCircle, Save } from "lucide-react";
+import { useEffect, useRef, useState, useTransition, type FormEvent, type ReactNode } from "react";
+import { ArrowUpRight, Check, ChevronDown, LockKeyhole } from "lucide-react";
 import { updateProfile } from "../_actions/update-profile";
 import { profilePhotoMaxBytes, validateProfile, type ProfileFieldErrors, type ProfileFormData } from "./profile-schema";
 
@@ -10,6 +10,7 @@ interface ProfileFormProps {
   phone: string | null;
   email: string | null;
   hasPassword: boolean;
+  identity: ReactNode;
 }
 
 const passwordFields = [
@@ -18,23 +19,27 @@ const passwordFields = [
   { name: "confirmPassword", label: "Confirme a nova senha", autoComplete: "new-password" },
 ];
 
-export function ProfileForm({ name, phone, email, hasPassword }: ProfileFormProps) {
+export function ProfileForm({ name, phone, email, hasPassword, identity }: ProfileFormProps) {
   const [saved, setSaved] = useState<ProfileFormData>({ name: name ?? "", phone: phone ?? "" });
   const [values, setValues] = useState(saved);
   const [errors, setErrors] = useState<ProfileFieldErrors>({});
   const [feedback, setFeedback] = useState<{ success: boolean; message: string } | null>(null);
   const [pending, startTransition] = useTransition();
-  const [hasExtras, setHasExtras] = useState(false);
+  const [photoName, setPhotoName] = useState("");
+  const [photoError, setPhotoError] = useState("");
+  const [hasPasswordChanges, setHasPasswordChanges] = useState(false);
+  const serverErrorsRef = useRef<ProfileFieldErrors | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
-  const dirty = values.name !== saved.name || values.phone !== saved.phone || hasExtras;
+  const dirty = values.name !== saved.name || values.phone !== saved.phone || Boolean(photoName) || hasPasswordChanges;
 
   function changeExtras() {
     if (!formRef.current) return;
     const form = new FormData(formRef.current);
     const photo = form.get("photo");
-    setHasExtras((photo instanceof File && photo.size > 0) || passwordFields.some(({ name }) => Boolean(form.get(name))));
+    setPhotoName(photo instanceof File ? photo.name : "");
+    setHasPasswordChanges(passwordFields.some(({ name }) => Boolean(form.get(name))));
     setFeedback(null);
   }
 
@@ -47,6 +52,23 @@ export function ProfileForm({ name, phone, email, hasPassword }: ProfileFormProp
   function focusError(fieldErrors: ProfileFieldErrors) {
     if (fieldErrors.name) nameRef.current?.focus();
     else if (fieldErrors.phone) phoneRef.current?.focus();
+  }
+
+  useEffect(() => {
+    if (!pending && serverErrorsRef.current) {
+      focusError(serverErrorsRef.current);
+      serverErrorsRef.current = null;
+    }
+  }, [pending]);
+
+  function discard() {
+    formRef.current?.reset();
+    setPhotoName("");
+    setPhotoError("");
+    setHasPasswordChanges(false);
+    setValues(saved);
+    setErrors({});
+    setFeedback(null);
   }
 
   function submit(event: FormEvent<HTMLFormElement>) {
@@ -63,7 +85,8 @@ export function ProfileForm({ name, phone, email, hasPassword }: ProfileFormProp
     const data = new FormData(form);
     const photo = data.get("photo");
     if (photo instanceof File && photo.size > profilePhotoMaxBytes) {
-      setFeedback({ success: false, message: "Escolha uma foto de até 900 KB." });
+      setPhotoError("Escolha uma foto de até 900 KB.");
+      form.querySelector<HTMLInputElement>("#profile-photo")?.focus();
       return;
     }
 
@@ -75,12 +98,14 @@ export function ProfileForm({ name, phone, email, hasPassword }: ProfileFormProp
         setFeedback(result);
         if (result.success) {
           form.reset();
-          setHasExtras(false);
+          setPhotoName("");
+          setPhotoError("");
+          setHasPasswordChanges(false);
           setSaved(result.data);
           setValues(result.data);
         } else if (result.errors) {
           setErrors(result.errors);
-          focusError(result.errors);
+          serverErrorsRef.current = result.errors;
         }
       } catch {
         setFeedback({ success: false, message: "Não foi possível salvar. Confira sua conexão e tente novamente." });
@@ -89,77 +114,103 @@ export function ProfileForm({ name, phone, email, hasPassword }: ProfileFormProp
   }
 
   return (
-    <form ref={formRef} method="post" onSubmit={submit} noValidate aria-busy={pending} className="min-w-0">
-      <fieldset disabled={pending} className="min-w-0 space-y-6 disabled:opacity-70">
-        <legend className="text-xl font-medium tracking-tight">Informações pessoais</legend>
-        <p className="text-sm leading-6 text-[#74616a]">Mantenha seus dados de contato atualizados. O campo de nome é obrigatório.</p>
-        <div>
-          <label htmlFor="profile-name" className="mb-2 block text-sm font-medium">Nome completo <span className="text-[#92304f]" aria-hidden="true">*</span></label>
-          <input ref={nameRef} id="profile-name" name="name" autoComplete="name" required minLength={2} maxLength={100}
-            value={values.name} onChange={(event) => change("name", event.target.value)}
-            aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "profile-name-error" : undefined} />
-          {errors.name ? <p id="profile-name-error" className="mt-2 text-sm text-red-700" role="alert">{errors.name}</p> : null}
-        </div>
-        <div className="grid gap-6 xl:grid-cols-2">
-          <div className="min-w-0">
-            <label htmlFor="profile-email" className="mb-2 block text-sm font-medium">E-mail da conta</label>
-            <input id="profile-email" type="email" autoComplete="email" value={email ?? ""} readOnly aria-describedby="profile-email-hint" className="!bg-[#faf5f7]" />
-            <p id="profile-email-hint" className="mt-2 text-xs leading-5 text-[#74616a]">Vinculado à sua conta de acesso. Não pode ser alterado aqui.</p>
+    <form ref={formRef} method="post" onSubmit={submit} noValidate aria-busy={pending} className="account-profile-form">
+      <fieldset disabled={pending} className="account-profile-portrait">
+        <legend className="sr-only">Identidade do perfil</legend>
+        {identity}
+        <div className="account-profile-photo">
+          <label htmlFor="profile-photo" className="account-profile-label">Foto de perfil</label>
+          <div className="account-profile-upload">
+            <input id="profile-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp"
+              onChange={() => {
+                changeExtras();
+                setPhotoError("");
+              }}
+              aria-invalid={Boolean(photoError)}
+              aria-describedby={photoError ? "profile-photo-error" : "profile-photo-hint"} />
+            <span aria-hidden="true">Escolher foto</span>
+            <span aria-hidden="true" title={photoName || undefined}>{photoName || "Nenhum arquivo"}</span>
           </div>
-          <div className="min-w-0">
-            <label htmlFor="profile-phone" className="mb-2 block text-sm font-medium">Telefone <span className="font-normal text-[#74616a]">(opcional)</span></label>
+          {photoError
+            ? <p id="profile-photo-error" role="alert" className="account-profile-error">{photoError}</p>
+            : <p id="profile-photo-hint" className="account-profile-hint">JPG, PNG ou WebP de até 900 KB.</p>}
+        </div>
+      </fieldset>
+
+      <section className="account-profile-section" aria-labelledby="profile-contact-title">
+        <div>
+          <h2 id="profile-contact-title" className="account-profile-section-title">Dados pessoais</h2>
+          <p className="account-profile-section-lead">Mantenha seus dados de contato atualizados.</p>
+        </div>
+        <fieldset disabled={pending} aria-labelledby="profile-contact-title" className="account-profile-fields">
+          <div className="account-profile-full-width">
+            <label htmlFor="profile-name" className="account-profile-label">Nome completo <span aria-hidden="true">*</span></label>
+            <input ref={nameRef} id="profile-name" name="name" autoComplete="name" required minLength={2} maxLength={100}
+              value={values.name} onChange={(event) => change("name", event.target.value)}
+              aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "profile-name-error" : undefined} />
+            {errors.name && <p id="profile-name-error" className="account-profile-error" role="alert">{errors.name}</p>}
+          </div>
+          <div>
+            <label htmlFor="profile-email" className="account-profile-label">E-mail da conta</label>
+            <input id="profile-email" type="email" autoComplete="email" value={email ?? ""} readOnly aria-describedby="profile-email-hint" />
+            <p id="profile-email-hint" className="account-profile-hint">O e-mail de acesso não pode ser alterado aqui.</p>
+          </div>
+          <div>
+            <label htmlFor="profile-phone" className="account-profile-label">Telefone <span className="account-profile-optional">(opcional)</span></label>
             <input ref={phoneRef} id="profile-phone" name="phone" type="tel" autoComplete="tel" inputMode="tel" maxLength={25}
               value={values.phone} onChange={(event) => change("phone", event.target.value)}
               aria-invalid={Boolean(errors.phone)} aria-describedby={errors.phone ? "profile-phone-error" : "profile-phone-hint"} />
-            {errors.phone ? <p id="profile-phone-error" role="alert" className="mt-2 text-sm text-red-700">{errors.phone}</p>
-              : <p id="profile-phone-hint" className="mt-2 text-xs leading-5 text-[#74616a]">Inclua o DDD e, se necessário, o código do país.</p>}
+            {errors.phone ? <p id="profile-phone-error" role="alert" className="account-profile-error">{errors.phone}</p>
+              : <p id="profile-phone-hint" className="account-profile-hint">Inclua o DDD e, se necessário, o código do país.</p>}
           </div>
-        </div>
-        <div>
-          <label htmlFor="profile-photo" className="mb-2 block text-sm font-medium">Foto de perfil</label>
-          <input id="profile-photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp"
-            onChange={changeExtras} aria-describedby="profile-photo-hint"
-            className="file:mr-3 file:cursor-pointer file:font-medium file:text-[#92304f]" />
-          <p id="profile-photo-hint" className="mt-2 text-xs leading-5 text-[#74616a]">JPG, PNG ou WebP de até 900 KB.</p>
-        </div>
-      </fieldset>
+        </fieldset>
+      </section>
 
-      <fieldset disabled={pending} className="mt-8 min-w-0 space-y-4 disabled:opacity-70">
-        <legend className="text-xl font-medium tracking-tight">Senha</legend>
+      <section className="account-profile-section" aria-labelledby="profile-security-title">
+        <div>
+          <h2 id="profile-security-title" className="account-profile-section-title">Segurança</h2>
+          <p className="account-profile-section-lead">Gerencie sua senha de acesso.</p>
+        </div>
         {hasPassword ? (
-          <>
-            <p id="profile-password-hint" className="text-sm leading-6 text-[#74616a]">Preencha os campos abaixo se quiser trocar sua senha. Use de 12 a 256 caracteres na nova senha.</p>
-            <div className="grid gap-4 xl:grid-cols-3">
+          <details className="account-profile-password">
+            <summary className="account-profile-password-toggle">
+              <LockKeyhole size={17} strokeWidth={1.5} aria-hidden="true" />
+              <span>Alterar senha</span>
+              {hasPasswordChanges && <span className="account-profile-password-draft">Alteração pendente</span>}
+              <ChevronDown size={17} strokeWidth={1.5} className="account-profile-chevron" aria-hidden="true" />
+            </summary>
+            <fieldset disabled={pending} className="account-profile-password-fields">
+              <legend className="sr-only">Alterar senha</legend>
+              <p id="profile-password-hint" className="account-profile-hint">Use entre 12 e 256 caracteres na nova senha.</p>
               {passwordFields.map(({ name, label, autoComplete }) => (
-                <div key={name} className="min-w-0">
-                  <label htmlFor={name} className="mb-2 block text-sm font-medium">{label}</label>
+                <div key={name}>
+                  <label htmlFor={name} className="account-profile-label">{label}</label>
                   <input id={name} name={name} type="password" autoComplete={autoComplete}
-                    maxLength={256} onChange={changeExtras} aria-describedby="profile-password-hint" />
+                    maxLength={256} onChange={changeExtras}
+                    aria-describedby={name === "newPassword" ? "profile-password-hint" : undefined} />
                 </div>
               ))}
-            </div>
-          </>
+            </fieldset>
+          </details>
         ) : (
-          <p className="text-sm leading-6 text-[#74616a]">Sua conta usa login social. Para trocar a senha, acesse as configurações do Google ou da Apple.</p>
+          <p className="account-profile-social">Sua conta usa login social. Para trocar a senha, acesse as configurações do Google ou da Apple.</p>
         )}
-      </fieldset>
+      </section>
 
-      <div className="mt-8 border-t border-[#ecdfe4] pt-6">
-        {feedback ? <p role={feedback.success ? "status" : "alert"} className={`mb-5 flex items-start gap-2 rounded-md p-3 text-sm leading-6 ${feedback.success ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-800"}`}>
-          {feedback.success ? <Check className="mt-1 size-4 shrink-0" aria-hidden="true" /> : null}{feedback.message}
-        </p> : null}
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <button type="button" disabled={!dirty || pending} onClick={() => {
-            formRef.current?.reset();
-            setHasExtras(false);
-            setValues(saved);
-            setErrors({});
-            setFeedback(null);
-          }}
-            className="min-h-12 rounded-md border border-[#ecdfe4] px-5 text-sm font-medium transition-colors hover:bg-[#f8e9ef] disabled:cursor-not-allowed disabled:opacity-50">Descartar alterações</button>
-          <button type="submit" disabled={!dirty || pending} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-[#a7365b] px-6 text-sm font-medium text-white transition-colors hover:bg-[#92304f] active:bg-[#7d2944] disabled:cursor-not-allowed disabled:opacity-50">
-            {pending ? <LoaderCircle className="size-4 animate-spin motion-reduce:animate-none" aria-hidden="true" /> : <Save className="size-4" aria-hidden="true" />}
+      <div className="account-profile-footer">
+        {feedback && (
+          <p role={feedback.success ? "status" : "alert"} className="account-profile-feedback" data-success={feedback.success}>
+            {feedback.success && <Check size={17} aria-hidden="true" />}
+            {feedback.message}
+          </p>
+        )}
+        <div className="account-profile-actions">
+          <button type="button" disabled={!dirty || pending} onClick={discard} className="account-button">
+            Descartar alterações
+          </button>
+          <button type="submit" disabled={!dirty || pending} className="account-button account-button-primary account-profile-save">
             {pending ? "Salvando alterações…" : "Salvar alterações"}
+            {!pending && <ArrowUpRight size={17} strokeWidth={1.5} aria-hidden="true" />}
           </button>
         </div>
       </div>

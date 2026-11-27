@@ -1,50 +1,64 @@
-import { ArrowRight, Heart, MapPin, Scissors, ShoppingBag, UserRound } from "lucide-react";
+import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRight, Heart, MapPin, Scissors, ShoppingBag, UserRound } from "lucide-react";
 import { requireAccount } from "@/lib/data-access/current-user";
+import atelier from "@/app/(public)/(information)/about-us/_assets/dressmaking.webp";
+
+export const metadata: Metadata = { title: "Minha conta | Moura Center" };
 
 const sections = [
-  { href: "/account/orders", title: "Meus Pedidos", description: "Consulte seu histórico de compras e acompanhe seus pedidos.", action: "Ver meus pedidos", icon: ShoppingBag },
-  { href: "/account/addresses", title: "Meus Endereços", description: "Encontre os endereços cadastrados para suas entregas.", action: "Ver meus endereços", icon: MapPin },
-  { href: "/account/favorites", title: "Lista de Desejos", description: "Revisite os produtos que você guardou para depois.", action: "Ver meus favoritos", icon: Heart },
-  { href: "/account/profile", title: "Meu Perfil", description: "Acesse seu nome, e-mail e demais informações pessoais.", action: "Acessar meu perfil", icon: UserRound },
+  { href: "/account/orders", title: "Meus pedidos", description: "Acompanhe suas compras e consulte o histórico.", icon: ShoppingBag },
+  { href: "/account/favorites", title: "Lista de desejos", description: "Reencontre os produtos que você guardou.", icon: Heart },
+  { href: "/account/addresses", title: "Meus endereços", description: "Consulte seus endereços de entrega.", icon: MapPin },
+  { href: "/account/profile", title: "Meu perfil", description: "Atualize seus dados pessoais e sua senha.", icon: UserRound },
 ];
 
 export default async function Account() {
   const user = await requireAccount();
+  const name = user.name?.trim().split(/\s+/)[0];
 
   return (
-    <div className="max-w-[860px]">
-      <header className="mb-8 border-b border-[#ecdfe4] pb-8 sm:mb-10 sm:pb-10">
-        <h1 className="break-words text-3xl font-medium tracking-tight sm:text-4xl">{user.name?.trim() || "Minha conta"}</h1>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-[#74616a] sm:text-base">
-          Bem-vinda ao seu espaço na Moura Center. Acesse suas compras, seus favoritos e suas informações pessoais.
-        </p>
+    <div className="account-editorial account-enter">
+      <header className="account-cover">
+        <div className="account-cover-copy">
+          <p className="account-eyebrow">Minha conta</p>
+          <h1 className="account-title">Olá{name ? <>, <em>{name}</em></> : null}.</h1>
+          <p className="account-lead">Acompanhe suas compras e cuide dos seus dados em um só lugar.</p>
+        </div>
+        <div className="account-cover-photo" aria-hidden="true">
+          <Image
+            src={atelier}
+            alt=""
+            fill
+            sizes="(min-width: 1440px) 470px, (min-width: 960px) 36vw, (min-width: 560px) 48vw, 94vw"
+          />
+        </div>
       </header>
 
-      <section aria-labelledby="account-sections-title">
-        <h2 id="account-sections-title" className="mb-6 text-xl font-medium tracking-tight">O que você deseja acessar?</h2>
-        <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
-          {sections.map(({ href, title, description, action, icon: Icon }) => (
-            <Link key={href} href={href} className="group flex flex-col rounded-lg border border-[#ecdfe4] bg-white p-6 transition-colors hover:border-[#d5a3b4] hover:bg-[#fdf5f8] sm:p-7">
-              <Icon className="mb-5 size-6 text-[#a7365b]" strokeWidth={1.5} aria-hidden="true" />
-              <h3 className="text-lg font-medium tracking-tight">{title}</h3>
-              <p className="mt-2 mb-6 text-sm leading-6 text-[#74616a]">{description}</p>
-              <span className="mt-auto flex min-h-11 items-center justify-between gap-3 text-sm font-medium text-[#92304f]">
-                {action}
-                <ArrowRight className="size-4 shrink-0 transition-transform group-hover:translate-x-1 motion-reduce:transform-none" aria-hidden="true" />
-              </span>
-            </Link>
+      <section className="account-directory" aria-labelledby="account-directory-title">
+        <h2 id="account-directory-title">O que você procura?</h2>
+        <ul className="account-shortcuts">
+          {sections.map(({ href, title, description, icon: Icon }) => (
+            <li key={href}>
+              <Link href={href} className="account-shortcut">
+                <Icon size={21} strokeWidth={1.5} aria-hidden="true" />
+                <div>
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+                </div>
+                <ArrowUpRight size={17} strokeWidth={1.5} aria-hidden="true" />
+              </Link>
+            </li>
           ))}
-          <article className="flex flex-col rounded-lg border border-[#ecdfe4] bg-white p-6 sm:p-7">
-            <Scissors className="mb-5 size-6 text-[#a7365b]" strokeWidth={1.5} aria-hidden="true" />
-            <h3 className="text-lg font-medium tracking-tight">Ateliê &amp; Consultoria</h3>
-            <p className="mt-2 mb-6 text-sm leading-6 text-[#74616a]">
-              Consultoria de moda e criação de peças sob medida.
-            </p>
-            <span className="mt-auto flex min-h-11 items-center text-sm font-medium text-[#74616a]">
-              Em breve
-            </span>
-          </article>
+        </ul>
+        <div className="account-atelier">
+          <Scissors size={21} strokeWidth={1.5} aria-hidden="true" />
+          <div>
+            <h3>Ateliê &amp; Consultoria</h3>
+            <p>Consultoria de moda e criação de peças sob medida.</p>
+          </div>
+          <span>Em breve</span>
         </div>
       </section>
     </div>

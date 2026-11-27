@@ -1,82 +1,223 @@
 .moura-login-page {
-  display: grid;
+  --shop-ink: #231c20;
+  --shop-muted: #605457;
+  --shop-brand: #552339;
+  --shop-line: #e0d8d4;
+  --shop-surface: #fcfaf8;
+  --login-paper: #f2eae5;
+  --login-serif: Baskerville, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --login-gutter: clamp(16px, 3.6vw, 56px);
+  --login-ease: cubic-bezier(.2, .75, .3, 1);
   min-height: 100svh;
-  place-items: center;
-  padding: clamp(1rem, 4vw, 4rem);
-  background: #fbf3f5;
 }
 
+.moura-login-page :is(a, button, input):focus-visible {
+  outline-color: var(--shop-brand);
+  outline-offset: 3px;
+}
+
+.moura-login-header,
 .moura-login-shell {
-  display: grid;
-  width: min(100%, 73rem);
-  border: 1px solid var(--shop-line);
-  border-radius: 1.5rem;
-  background: white;
-  box-shadow: 0 20px 64px #55223b0c;
+  width: min(100%, 1600px);
+  margin-inline: auto;
+  padding-inline: var(--login-gutter);
 }
 
-.moura-login-access {
+.moura-login-header {
   display: grid;
-  min-width: 0;
-  justify-items: center;
-  align-content: center;
-  padding: 1.25rem clamp(1.25rem, 5vw, 4rem) 2.5rem;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: 78px;
 }
 
 .moura-login-back {
   display: inline-flex;
-  min-height: 44px;
-  width: min(100%, 25rem);
   align-items: center;
-  gap: 0.5rem;
-  color: var(--shop-brand);
-  font-size: 0.875rem;
-  font-weight: 600;
+  justify-self: start;
+  min-height: 44px;
+  gap: 8px;
+  font-size: .8125rem;
+  font-weight: 550;
 }
 
 .moura-login-back:hover {
+  color: var(--shop-brand);
   text-decoration: underline;
-  text-underline-offset: 0.2em;
+  text-underline-offset: .25em;
+}
+
+.moura-login-wordmark {
+  position: relative;
+  display: block;
+  width: clamp(130px, 15vw, 182px);
+  height: 58px;
+  overflow: hidden;
+}
+
+.moura-login-wordmark img {
+  position: absolute;
+  top: 50%;
+  left: -21.25%;
+  width: 142.5%;
+  max-width: none;
+  height: auto;
+  transform: translateY(-50%);
+  mix-blend-mode: multiply;
+}
+
+.moura-login-shell {
+  display: grid;
+  gap: var(--login-gutter);
+  padding-bottom: var(--login-gutter);
 }
 
 .moura-login-content {
   width: min(100%, 25rem);
-  padding-top: clamp(1.25rem, 4vw, 2.75rem);
-  animation: moura-login-enter 320ms ease-out both;
+  margin-inline: auto;
+  align-self: center;
+  padding: clamp(22px, 4vw, 48px) 4px;
 }
 
-@keyframes moura-login-enter {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.moura-login-brand {
-  display: block;
-  color: var(--shop-brand);
+.moura-login-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .6875rem;
   font-weight: 650;
+  letter-spacing: .18em;
+  text-transform: uppercase;
 }
 
-.moura-login-content h1 {
-  margin-top: 0.55rem;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.25rem, 4.1vw, 3.55rem);
-  line-height: 1.05;
-  letter-spacing: -0.045em;
-  text-wrap: balance;
+.moura-login-intro .moura-login-label { color: var(--shop-brand); }
+
+.moura-login-label::before {
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  content: "";
+}
+
+.moura-login-intro h1 {
+  margin-top: 12px;
+  font-family: var(--login-serif);
+  font-size: clamp(2.75rem, 4.25vw, 4.5rem);
+  font-weight: 400;
+  line-height: .99;
+  letter-spacing: -.057em;
+}
+
+.moura-login-intro em {
+  color: var(--shop-brand);
+  font-weight: inherit;
+  white-space: nowrap;
 }
 
 .moura-login-description {
-  margin-top: 0.9rem;
+  max-width: 35ch;
+  margin-top: 14px;
   color: var(--shop-muted);
-  line-height: 1.55;
+  font-size: .9375rem;
+  line-height: 1.6;
+}
+
+.moura-login-methods,
+.moura-login-form {
+  display: grid;
+  gap: 16px;
+}
+
+.moura-login-methods,
+.moura-login-loading { margin-top: 26px; }
+
+.moura-login-loading {
+  min-height: 310px;
+  color: var(--shop-muted);
+  font-size: .875rem;
+}
+
+.moura-login-field-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: .8125rem;
+  font-weight: 600;
+}
+
+.moura-login-page input {
+  min-height: 52px;
+  border-color: #ada09b;
+  border-radius: 3px;
+  background: transparent;
+}
+
+.moura-login-page input:hover { border-color: var(--shop-brand); }
+.moura-login-page input[aria-invalid="true"] { border-color: #9a3350; }
+.moura-login-page .moura-login-password { padding-right: 58px; }
+
+.moura-login-page .moura-login-visibility {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  width: 44px;
+  height: 44px;
+  transform: translateY(-50%);
+  border-radius: 2px;
+  color: var(--shop-muted);
+  cursor: pointer;
+}
+
+.moura-login-page .moura-login-visibility:hover { background: var(--login-paper); }
+.moura-login-page .moura-login-visibility:focus-visible { outline-offset: -2px; }
+
+.moura-login-field-error,
+.moura-login-alert {
+  color: #862744;
+  font-size: .8125rem;
+  line-height: 1.5;
+}
+
+.moura-login-field-error { margin-top: 6px; }
+
+.moura-login-alert {
+  border-inline-start: 2px solid currentColor;
+  background: #f7ebee;
+  padding: 10px 12px;
+}
+
+.moura-login-page :is(.moura-login-submit, .moura-login-provider) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  min-height: 50px;
+  gap: 10px;
+  border-radius: 3px;
+  padding: 10px 16px;
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.moura-login-page .moura-login-submit {
+  padding-inline: 44px;
+  background: var(--shop-brand);
+  color: white;
+}
+
+.moura-login-page .moura-login-submit:hover:not(:disabled) { background: #432033; }
+.moura-login-page .moura-login-submit:disabled { cursor: wait; }
+
+.moura-login-submit svg {
+  position: absolute;
+  right: 16px;
 }
 
 .moura-login-divider {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 12px;
   color: var(--shop-muted);
-  font-size: 0.875rem;
+  font-size: .8125rem;
 }
 
 .moura-login-divider::before,
@@ -87,26 +228,114 @@
   content: "";
 }
 
-.moura-login-photo {
-  position: relative;
-  display: none;
+.moura-login-providers { display: grid; gap: 10px; }
+
+.moura-login-page .moura-login-provider { border: 1px solid #ada09b; }
+.moura-login-page .moura-login-provider:hover:not(:disabled) { background: var(--login-paper); }
+.moura-login-page .moura-login-provider:disabled { cursor: wait; }
+.moura-login-page .moura-login-provider[type="button"]:disabled {
+  border-color: var(--shop-line);
+  color: var(--shop-muted);
+  cursor: not-allowed;
+}
+.moura-login-provider[type="button"]:disabled svg { opacity: .65; }
+
+.moura-login-provider-note {
+  color: var(--shop-muted);
+  text-align: center;
+  font-size: .75rem;
+  line-height: 1.5;
 }
 
-@media (min-width: 900px) {
+.moura-login-campaign {
+  position: relative;
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+  min-height: clamp(220px, 56vw, 370px);
+  background: #624239;
+  isolation: isolate;
+}
+
+.moura-login-campaign img {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 12%;
+}
+
+.moura-login-campaign::after {
+  position: absolute;
+  z-index: -1;
+  inset: 40% 0 0;
+  background: linear-gradient(transparent, #25131bd9);
+  content: "";
+}
+
+.moura-login-caption {
+  display: grid;
+  gap: 7px;
+  padding: clamp(20px, 3.8vw, 52px);
+  color: #fffaf6;
+}
+
+.moura-login-caption > span:last-child {
+  display: block;
+  font-family: var(--login-serif);
+  font-size: clamp(2.15rem, 4.5vw, 4.6rem);
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+@media (max-width: 480px) {
+  .moura-login-header {
+    grid-template-columns: 1fr auto;
+    min-height: 64px;
+    border-bottom: 1px solid var(--shop-line);
+  }
+}
+
+@media (min-width: 800px) {
   .moura-login-shell {
-    grid-template-columns: 1.05fr 1fr;
-    min-height: 42rem;
+    grid-template-columns: minmax(0, 1.13fr) minmax(0, 1fr);
+    min-height: calc(100svh - 78px);
   }
 
-  .moura-login-access {
-    padding-block: 2rem 3rem;
+  .moura-login-content {
+    grid-column: 2;
+    grid-row: 1;
+    width: min(100% - 32px, 25rem);
   }
 
-  .moura-login-photo {
-    display: block;
-    overflow: hidden;
-    margin: 0.75rem;
-    border-radius: 1rem;
-    background: #e9e5e5;
+  .moura-login-campaign {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 610px;
+  }
+
+  .moura-login-campaign img { object-position: center 8%; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .moura-login-page [data-enter] { animation: moura-login-enter 400ms var(--login-ease) both; }
+  .moura-login-page .moura-login-caption { animation-delay: 65ms; }
+
+  @keyframes moura-login-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .moura-login-page .moura-login-submit,
+  .moura-login-submit svg { transition: transform 160ms var(--login-ease); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .moura-login-submit:hover:not(:disabled) svg { transform: translate(2px, -2px); }
+
+    .moura-login-page .moura-login-submit:active:not(:disabled):not(:focus-visible) {
+      transform: scale(.985);
+    }
   }
 }

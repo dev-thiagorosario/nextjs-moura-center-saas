@@ -1,62 +1,97 @@
 "use client";
 
-import { ArrowUpRight, Heart, House, LogOut, MapPin, Scissors, ShoppingBag, UserRound } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Heart, House, LogOut, MapPin, Scissors, ShoppingBag, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useActionState } from "react";
+import { useActionState, useId, useRef, useState } from "react";
 import { handleLogout } from "../profile/_actions/logout";
+import "./sidebar.css";
 
 const navigation = [
-  { href: "/account", label: "Minha conta", description: "Visão geral da sua conta", icon: House },
-  { href: "/account/orders", label: "Meus Pedidos", description: "Acompanhe suas compras", icon: ShoppingBag },
-  { href: "/account/addresses", label: "Meus Endereços", description: "Seus lugares de entrega", icon: MapPin },
-  { href: "/account/favorites", label: "Lista de Desejos", description: "Guarde seus favoritos", icon: Heart },
-  { href: "/account/profile", label: "Meu Perfil", description: "Suas informações pessoais", icon: UserRound },
+  { href: "/account", label: "Minha conta", icon: House },
+  { href: "/account/orders", label: "Meus pedidos", icon: ShoppingBag },
+  { href: "/account/addresses", label: "Meus endereços", icon: MapPin },
+  { href: "/account/favorites", label: "Lista de desejos", icon: Heart },
+  { href: "/account/profile", label: "Meu perfil", icon: UserRound },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const menuId = useId();
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [openOn, setOpenOn] = useState<string | null>(null);
   const [logoutError, logoutAction, isLoggingOut] = useActionState(handleLogout, "");
+  const open = openOn !== null && openOn === pathname;
+  const active = navigation.find(({ href }) => pathname === href || (href !== "/account" && pathname?.startsWith(`${href}/`)));
+  const ActiveIcon = active?.icon ?? House;
 
   return (
-    <aside className="border-b border-[#ecdfe4] pb-6 lg:border-r lg:border-b-0 lg:pr-8 lg:pb-0">
-      <div className="mb-6 hidden lg:block">
-        <p className="text-xl font-medium tracking-tight">Minha conta</p>
-        <p className="mt-2 text-sm leading-6 text-[#74616a]">Um espaço para cuidar do que é seu.</p>
-      </div>
-      <nav aria-label="Minha conta" className="grid grid-cols-2 gap-2 lg:grid-cols-1 lg:gap-3">
-        {navigation.map(({ href, label, description, icon: Icon }) => {
-          const selected = pathname === href || (href !== "/account" && pathname.startsWith(`${href}/`));
-          return (
-            <Link key={href} href={href} aria-current={selected ? "page" : undefined}
-              className={`flex min-h-14 items-center gap-3 rounded-lg border px-3 py-3 text-sm transition-colors lg:px-4 lg:py-4 ${selected ? "border-[#e9c4d1] bg-[#f8e9ef] text-[#92304f]" : "border-transparent hover:border-[#ecdfe4] hover:bg-white"}`}>
-              <Icon className="size-5 shrink-0" strokeWidth={1.5} aria-hidden="true" />
-              <span className="min-w-0"><span className="block font-medium">{label}</span><span className="mt-1 hidden text-xs text-[#74616a] lg:block">{description}</span></span>
-            </Link>
-          );
-        })}
-        <div className="flex min-h-14 items-center gap-3 rounded-lg border border-transparent px-3 py-3 text-sm text-(--shop-muted) lg:px-4 lg:py-4">
-          <Scissors className="size-5 shrink-0" strokeWidth={1.5} aria-hidden="true" />
-          <span className="min-w-0">
-            <span className="block font-medium">Ateliê &amp; Consultoria</span>
-            <span className="mt-1 block text-xs">Em breve</span>
-          </span>
+    <aside
+      className="account-nav-sidebar"
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && open) {
+          event.preventDefault();
+          setOpenOn(null);
+          triggerRef.current?.focus();
+        }
+      }}
+    >
+      <p className="account-nav-heading">Área da cliente</p>
+      <button
+        type="button"
+        className="account-nav-trigger"
+        ref={triggerRef}
+        aria-controls={menuId}
+        aria-expanded={open}
+        aria-label={`Menu da conta, ${active?.label ?? "Área da cliente"}`}
+        onClick={() => setOpenOn(open ? null : pathname)}
+      >
+        <ActiveIcon size={19} strokeWidth={1.5} aria-hidden="true" />
+        <span>{active?.label ?? "Área da cliente"}</span>
+        <ChevronDown className="account-nav-chevron" size={18} strokeWidth={1.5} aria-hidden="true" />
+      </button>
+      <div id={menuId} className="account-nav-panel" data-open={open}>
+        <nav aria-label="Minha conta">
+          <ul className="account-nav-list">
+            {navigation.map(({ href, label, icon: Icon }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  aria-current={active?.href === href ? (pathname === href ? "page" : "location") : undefined}
+                  className="account-nav-item"
+                  onNavigate={() => {
+                    if (!open) return;
+                    setOpenOn(null);
+                    if (pathname === href) triggerRef.current?.focus();
+                  }}
+                >
+                  <Icon size={18} strokeWidth={1.5} aria-hidden="true" />
+                  <span>{label}</span>
+                </Link>
+              </li>
+            ))}
+            <li className="account-nav-service">
+              <Scissors size={18} strokeWidth={1.5} aria-hidden="true" />
+              <div>
+                <span>Ateliê &amp; Consultoria</span>
+                <span className="account-nav-availability">Em breve</span>
+              </div>
+            </li>
+          </ul>
+        </nav>
+        <div className="account-nav-utilities">
+          <Link href="/" className="account-nav-utility">
+            Continuar comprando <ArrowUpRight size={16} strokeWidth={1.5} aria-hidden="true" />
+          </Link>
+          <form action={logoutAction}>
+            <button type="submit" disabled={isLoggingOut} className="account-nav-utility">
+              {isLoggingOut ? "Saindo…" : "Sair da conta"}
+              <LogOut size={16} strokeWidth={1.5} aria-hidden="true" />
+            </button>
+            <p role="status" className="account-nav-error">{logoutError}</p>
+          </form>
         </div>
-      </nav>
-      <form action={logoutAction} className="mt-3">
-        <button
-          type="submit"
-          disabled={isLoggingOut}
-          className="flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-lg border border-transparent px-3 py-3 text-left text-sm font-medium text-[#92304f] transition-colors hover:border-[#ecdfe4] hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#92304f] disabled:cursor-wait disabled:opacity-60 lg:px-4 lg:py-4"
-        >
-          <LogOut className="size-5 shrink-0" strokeWidth={1.5} aria-hidden="true" />
-          {isLoggingOut ? "Saindo…" : "Sair da conta"}
-        </button>
-        <p role="status" className="px-3 text-sm text-[#92304f] lg:px-4">
-          {logoutError}
-        </p>
-      </form>
-      <Link href="/" className="mt-10 hidden min-h-11 items-center justify-between border-t border-[#ecdfe4] pt-6 text-sm text-[#74616a] hover:text-[#a7365b] lg:flex">Continuar comprando <ArrowUpRight className="size-4" aria-hidden="true" /></Link>
+      </div>
     </aside>
   );
 }
