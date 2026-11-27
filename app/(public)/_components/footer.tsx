@@ -1,14 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
+import { helpDestination } from "../(information)/customer-service/help-navigation";
 import logoWordmark from "../_assets/logo-wordmark-dark.png";
 
 const navigation = [
   { label: "Sobre Nós", href: "/?categoria=moda-fitness" },
-  { label: "Atendimento", href: "/?categoria=moda-praia" },
+  { label: "Atendimento", href: "/customer-service" },
   { label: "Troca e Devoluções", href: "/?categoria=cosmeticos" },
   { label: "Perguntas frequentes", href: "/?categoria=acessorios" },
   { label: "Nossas clientes", href: "/?categoria=acessorios" },
   { label: "Fale Conosco", href: "/?categoria=acessorios" },
+];
+
+const supportNavigation = [
+  { label: "Sobre Nós", href: "/about-us" },
+  { label: "Atendimento", href: "/customer-service" },
+  { label: "Trocas e Devoluções", href: helpDestination("exchanges") },
+  { label: "Perguntas frequentes", href: helpDestination("faq") },
+  { label: "Fale Conosco", href: helpDestination("contact") },
 ];
 
 // Replace these destinations with the store's official profiles when available.
@@ -45,7 +54,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-export async function Footer({ editorial = false }: { editorial?: boolean }) {
+export async function Footer({ editorial = false, customerService = false }: { editorial?: boolean; customerService?: boolean }) {
   "use cache";
   return (
     <footer className="mt-auto border-t border-[#b96a83]/40 bg-[#100d0f] text-[#d5cfd2]">
@@ -66,7 +75,7 @@ export async function Footer({ editorial = false }: { editorial?: boolean }) {
 
           <nav aria-label="Navegação do rodapé" className="w-full border-y border-[#b96a83]/20 py-6 lg:w-auto lg:flex-1 lg:border-y-0 lg:border-l lg:py-1 lg:pl-10">
             <ul className="grid grid-cols-2 gap-x-6 gap-y-2 text-center sm:flex sm:flex-wrap sm:justify-center sm:gap-x-7 lg:justify-start">
-              {navigation.map(({ label, href }) => (
+              {(customerService ? supportNavigation : navigation).map(({ label, href }) => (
                 <li key={label}>
                   <Link
                     href={editorial && label === "Sobre Nós" ? "/about-us" : href}
@@ -79,7 +88,7 @@ export async function Footer({ editorial = false }: { editorial?: boolean }) {
             </ul>
           </nav>
 
-          <div className="flex shrink-0 flex-col items-center gap-3 lg:items-end">
+          {!customerService && <div className="flex shrink-0 flex-col items-center gap-3 lg:items-end">
             <p className="text-xs tracking-[0.16em] text-[#bfb0b7] uppercase">Siga a Moura Center</p>
             <div className="flex gap-3">
               {socialLinks.map(({ label, href, icon: Icon }) => (
@@ -95,7 +104,7 @@ export async function Footer({ editorial = false }: { editorial?: boolean }) {
                 </a>
               ))}
             </div>
-          </div>
+          </div>}
         </div>
 
         <div className="flex flex-col items-center justify-between gap-3 border-t border-[#b96a83]/20 py-5 text-center text-xs leading-relaxed text-[#bfb0b7] sm:flex-row sm:text-left">
