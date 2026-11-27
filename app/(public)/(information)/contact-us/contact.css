@@ -1,0 +1,260 @@
+.moura-contact {
+  --shop-ink: #251b20;
+  --shop-muted: #65565c;
+  --shop-brand: #552339;
+  --shop-surface: #fcfaf8;
+  --shop-line: #ded1cb;
+  --contact-blush: #f3e6e4;
+  --contact-border: #a8989b;
+  --contact-error: #a02240;
+  --contact-serif: Baskerville, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --contact-gutter: clamp(1.125rem, 5vw, 5rem);
+  --contact-ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+.moura-contact .contact-skip {
+  position: fixed;
+  z-index: 60;
+  inset: .75rem auto auto var(--contact-gutter);
+  clip-path: inset(50%);
+  background: var(--shop-surface);
+  padding: .75rem 1rem;
+}
+
+.moura-contact .contact-skip:focus { clip-path: none; }
+
+.moura-contact :is(.contact-skip, main a, main button, main :is(input, select, textarea)):focus-visible {
+  outline: 2px solid var(--shop-brand);
+  outline-offset: 3px;
+}
+
+.contact-wrap {
+  width: min(100%, 90rem);
+  margin-inline: auto;
+  padding-inline: var(--contact-gutter);
+}
+
+.contact-intro { background: var(--contact-blush); }
+
+.contact-breadcrumb, .contact-breadcrumb li {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.contact-breadcrumb { min-height: 3.75rem; color: var(--shop-muted); font-size: .8125rem; }
+.contact-breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--shop-brand);
+  text-decoration: underline;
+  text-underline-offset: .25em;
+}
+
+.contact-intro-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, .49fr);
+  gap: clamp(2rem, 7vw, 7rem);
+  align-items: end;
+  padding-block: clamp(1.5rem, 3.3vw, 3.5rem) clamp(2rem, 4.75vw, 4.5rem);
+}
+
+.moura-contact main :is(h1, h2) {
+  font-family: var(--contact-serif);
+  font-weight: 400;
+  line-height: 1.03;
+  letter-spacing: -.05em;
+}
+
+.moura-contact main h1 { font-size: clamp(3.5rem, 8.7vw, 8.25rem); }
+.moura-contact main h1 em { color: var(--shop-brand); }
+.contact-intro-title > p {
+  max-width: 39ch;
+  margin-top: 1rem;
+  color: var(--shop-muted);
+  font-size: clamp(1rem, 1.5vw, 1.1875rem);
+  line-height: 1.55;
+}
+
+.contact-intro-action, .contact-shortcuts a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  min-height: 44px;
+  color: var(--shop-brand);
+  font-size: .875rem;
+  font-weight: 650;
+}
+
+.contact-intro-action {
+  display: inline-flex;
+  margin-top: .6rem;
+  text-decoration: underline;
+  text-underline-offset: .3em;
+}
+
+.contact-shortcuts > p { margin-bottom: .6rem; font-size: .875rem; font-weight: 650; }
+.contact-shortcuts li { border-top: 1px solid #cdb7bc; }
+.contact-shortcuts li:last-child { border-bottom: 1px solid #cdb7bc; }
+.contact-shortcuts a:hover { text-decoration: underline; text-underline-offset: .28em; }
+.contact-intro-action svg, .contact-shortcuts svg, .contact-channels svg { flex: none; }
+.contact-intro-action svg, .contact-shortcuts svg, .contact-channels a svg {
+  transition: transform 180ms var(--contact-ease);
+}
+.contact-intro-action:hover svg { transform: translateY(3px); }
+.contact-shortcuts a:hover svg, .contact-channels a:hover svg { transform: translate(2px, -2px); }
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, .49fr);
+  gap: clamp(2rem, 7vw, 7rem);
+  padding-block: clamp(2.25rem, 4.5vw, 4.5rem) clamp(3rem, 6vw, 6rem);
+}
+
+.contact-form-panel { scroll-margin-top: 2rem; min-width: 0; }
+.moura-contact main .contact-form-panel h2 { font-size: clamp(2.45rem, 4.2vw, 4.25rem); }
+.contact-form-note { margin: .85rem 0 1.1rem; color: var(--shop-muted); max-width: 56ch; line-height: 1.55; }
+.contact-required { margin-bottom: 1rem; color: var(--shop-muted); font-size: .8125rem; }
+.contact-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.15rem 1rem; }
+.contact-wide { grid-column: 1 / -1; }
+.contact-field { display: flex; flex-direction: column; gap: .375rem; }
+.contact-field label { font-size: .875rem; font-weight: 650; }
+.contact-field label span { color: var(--shop-muted); font-size: .8125rem; font-weight: 400; }
+.contact-field :is(input, select, textarea) {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  border: 1px solid var(--contact-border);
+  border-radius: 2px;
+  padding: .625rem .75rem;
+  background: #fffdfb;
+  color: var(--shop-ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.contact-field :is(input, textarea)::placeholder, .contact-field select:invalid { color: var(--shop-muted); opacity: 1; }
+.contact-field select { appearance: none; padding-right: 2rem; }
+.contact-field textarea { resize: vertical; }
+.contact-field [aria-invalid="true"] { border-color: var(--contact-error); }
+.contact-select { position: relative; }
+.contact-select svg { position: absolute; right: .75rem; top: 50%; translate: 0 -50%; pointer-events: none; }
+.contact-hint {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .25rem .75rem;
+  color: var(--shop-muted);
+  font-size: .8125rem;
+}
+.contact-count { font-variant-numeric: tabular-nums; }
+.contact-error { color: var(--contact-error); font-size: .875rem; }
+.contact-error:empty { position: absolute; }
+.contact-form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1rem; margin-top: 1.25rem; }
+
+.contact-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: .75rem;
+  min-height: 48px;
+  padding: .65rem 1rem;
+  border-radius: 2px;
+  background: var(--shop-brand);
+  color: #fffdfb;
+  font-size: .875rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: transform 160ms var(--contact-ease);
+}
+
+.contact-button:enabled:hover { background: #6a3048; }
+.contact-button:enabled:active { transform: translateY(1px); }
+.contact-button:disabled { cursor: default; opacity: .72; }
+.contact-review { margin-top: 1.3rem; padding: clamp(1rem, 3vw, 2rem); background: var(--contact-blush); }
+.contact-review > svg { margin-bottom: .5rem; color: var(--shop-brand); }
+.contact-review h3 { font-size: 1.125rem; font-weight: 650; }
+.contact-review h3:focus { outline: 2px solid var(--shop-brand); outline-offset: 3px; }
+.contact-review > p { margin-top: .375rem; color: var(--shop-muted); }
+.contact-review dl { display: grid; gap: .75rem; margin: 1.25rem 0; overflow-wrap: anywhere; }
+.contact-review dt { color: var(--shop-muted); font-size: .8125rem; }
+.contact-review-message { white-space: pre-wrap; }
+
+.contact-sidebar { min-width: 0; }
+.contact-channels {
+  padding: clamp(1.25rem, 2.75vw, 2.5rem);
+  border: 1px solid var(--shop-line);
+  background: #f7efeb;
+}
+.moura-contact main .contact-channels h2 { font-size: clamp(2rem, 3.25vw, 3rem); margin-bottom: 1rem; }
+.contact-channels li, .contact-hours {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-height: 68px;
+  border-top: 1px solid var(--shop-line);
+}
+.contact-channels li > svg, .contact-hours > svg { color: var(--shop-brand); }
+.contact-channels li a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: .5rem;
+  min-height: 64px;
+}
+.contact-channels li a:hover strong { text-decoration: underline; text-underline-offset: .2em; }
+.contact-channels :is(strong, h3) { font-size: .875rem; font-weight: 650; }
+.contact-channels small, .contact-hours p { display: block; color: var(--shop-muted); font-size: .8125rem; overflow-wrap: anywhere; }
+.contact-channels a span { min-width: 0; }
+.contact-hours { align-items: start; min-height: auto; padding-top: 1.125rem; }
+
+.contact-location { margin-top: 1.25rem; border: 1px solid var(--shop-line); }
+.contact-location-image { position: relative; aspect-ratio: 1.85; overflow: clip; background: var(--contact-blush); }
+.contact-location-image img { object-fit: cover; object-position: center 48%; }
+.contact-location-copy { display: flex; gap: .75rem; padding: 1.125rem 1.25rem; }
+.contact-location-copy svg { flex: none; color: var(--shop-brand); }
+.moura-contact main .contact-location h2 { font-size: clamp(1.6rem, 2.35vw, 2.25rem); }
+.contact-location :is(p, dl) { margin-top: .3rem; color: var(--shop-muted); font-size: .875rem; }
+.contact-location dt { font-weight: 650; }
+.contact-location iframe { display: block; width: 100%; min-height: 14rem; border: 0; }
+
+@media (max-width: 789px) {
+  .contact-intro-grid, .contact-layout { grid-template-columns: minmax(0, 1fr); }
+  .contact-intro-grid { gap: 1.5rem; }
+}
+
+@media (max-width: 530px) {
+  .contact-fields { grid-template-columns: minmax(0, 1fr); }
+  .moura-contact main h1 { font-size: clamp(3rem, 13vw, 4.25rem); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .contact-intro [data-enter] { animation: contact-enter 420ms var(--contact-ease) both; }
+  .contact-intro .contact-shortcuts[data-enter] { animation-delay: 55ms; }
+  .contact-conditional, .contact-review { animation: contact-enter 220ms var(--contact-ease) both; }
+  .contact-spinner { animation: contact-spin 720ms linear infinite; }
+
+  @supports (animation-timeline: view()) {
+    .contact-location-image[data-moment] img {
+      animation: contact-photo linear both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 70%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-intro-action svg, .contact-shortcuts svg, .contact-channels a svg, .contact-button { transition: none; }
+}
+
+@keyframes contact-enter {
+  from { opacity: 0; transform: translateY(8px); filter: blur(2px); }
+}
+@keyframes contact-photo {
+  from { opacity: .88; filter: saturate(.65); transform: scale(1.025); }
+  to { opacity: 1; filter: saturate(1); transform: scale(1); }
+}
+@keyframes contact-spin { to { transform: rotate(360deg); } }

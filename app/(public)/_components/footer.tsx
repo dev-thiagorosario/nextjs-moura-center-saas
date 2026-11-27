@@ -6,10 +6,10 @@ import logoWordmark from "../_assets/logo-wordmark-dark.png";
 const navigation = [
   { label: "Sobre Nós", href: "/?categoria=moda-fitness" },
   { label: "Atendimento", href: "/customer-service" },
-  { label: "Troca e Devoluções", href: "/?categoria=cosmeticos" },
-  { label: "Perguntas frequentes", href: "/?categoria=acessorios" },
+  { label: "Trocas e Devoluções", href: helpDestination("exchanges") },
+  { label: "Perguntas frequentes", href: helpDestination("faq") },
   { label: "Nossas clientes", href: "/?categoria=acessorios" },
-  { label: "Fale Conosco", href: "/?categoria=acessorios" },
+  { label: "Fale Conosco", href: helpDestination("contact") },
 ];
 
 const supportNavigation = [

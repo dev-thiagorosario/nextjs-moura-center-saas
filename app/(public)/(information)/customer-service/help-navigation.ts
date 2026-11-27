@@ -1,9 +1,9 @@
 const customerServicePath = "/customer-service";
 
 const futurePages = {
-  exchanges: { path: "/exchanges-and-returns", available: false, fallback: "#trocas" },
-  faq: { path: "/faq", available: false, fallback: "#perguntas" },
-  contact: { path: "/contact-us", available: false, fallback: "#canais" },
+  exchanges: { path: "/exchanges-and-returns", available: true, fallback: "#trocas" },
+  faq: { path: "/faq", available: true, fallback: "#perguntas" },
+  contact: { path: "/contact-us", available: true, fallback: "#canais" },
 };
 
 export function helpDestination(page: keyof typeof futurePages) {
