@@ -3,10 +3,12 @@ import "./about.css";
 import type { Metadata } from "next";
 
 import { Footer } from "@/app/(public)/_components/footer";
-import { Header } from "@/app/(public)/_components/header";
-import { NavBar } from "@/app/(public)/_components/nav-bar";
+import { InstitutionalHeader } from "@/app/(public)/(information)/_components/institutional-header";
+import { AboutMotion } from "./_components/about-motion";
 import { AtelierServices } from "./_components/atelier-services";
 import { BrandIntro } from "./_components/brand-intro";
+import { BrandStory } from "./_components/brand-story";
+import { ContinueExploring } from "./_components/continue-exploring";
 import { BrandValues } from "./_components/brand-values";
 import { FounderStory } from "./_components/founder-story";
 import { ProductSelection } from "./_components/product-selection";
@@ -32,20 +34,22 @@ export default function AboutUsPage() {
     <div lang="pt-BR" className="storefront moura-about flex min-h-screen flex-col">
       <a
         href="#about-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-4 focus:z-[60] focus:rounded-md focus:bg-(--shop-surface) focus:px-4 focus:py-3"
+        className="about-skip"
       >
         Pular para o conteúdo
       </a>
-      <Header />
-      <NavBar />
-      <main id="about-content" tabIndex={-1} className="flex-1 scroll-mt-28">
+      <InstitutionalHeader />
+      <main id="about-content" tabIndex={-1} className="about-main flex-1">
         <BrandIntro />
+        <BrandStory />
+        <ProductSelection />
         <FounderStory />
         <AtelierServices />
         <BrandValues />
-        <ProductSelection />
+        <ContinueExploring />
+        <AboutMotion />
       </main>
-      <Footer />
+      <Footer editorial />
     </div>
   );
 }

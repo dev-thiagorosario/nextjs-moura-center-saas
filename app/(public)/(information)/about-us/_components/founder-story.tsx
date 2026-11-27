@@ -4,29 +4,33 @@ import founder from "../_assets/ceo.png";
 
 export function FounderStory() {
   return (
-    <section aria-labelledby="about-founder" className="bg-[#f8e9ef]/55">
-      <div className="about-container grid items-center gap-6 py-10 sm:py-14 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:gap-10 lg:gap-16 lg:py-20 xl:gap-24">
-        <div className="overflow-hidden rounded-xl about-reveal-image">
+    <section className="about-wrap about-section about-founder" aria-labelledby="about-founder">
+      <figure>
+        <div className="about-photo about-founder-photo about-reveal">
           <Image
             src={founder}
-            alt="Izabella Moura diante de desenhos e amostras de tecido."
-            sizes="(min-width: 1440px) 553px, (min-width: 768px) 43vw, 95vw"
-            className="h-auto w-full"
+            alt="Izabella Moura em uma mesa com croquis e amostras de tecido."
+            fill
+            sizes="(min-width: 1440px) 550px, (min-width: 800px) 43vw, 94vw"
           />
         </div>
-        <div className="max-w-[55ch]">
-          <h2 id="about-founder" className="about-section-title">Conheça Izabella Moura</h2>
-          <p className="mt-2 font-medium text-(--shop-brand)">Fundadora &amp; CEO da Moura Center</p>
-          <div className="mt-5 space-y-4 sm:mt-6 about-body-copy">
-            <p>
-              Empresária formada em Design de Moda, Izabella leva à Moura Center um olhar atento
-              ao jeito de vestir de cada mulher.
-            </p>
-            <p>
-              Como consultora de moda, estilista e costureira, ela reúne no ateliê a escuta,
-              o olhar para o caimento e o trabalho manual que dão forma às peças exclusivas e personalizadas que cria.
-            </p>
-          </div>
+        <figcaption>Izabella Moura · Fundadora e CEO</figcaption>
+      </figure>
+      <div className="about-founder-copy">
+        <p className="about-label">Quem está por trás da marca</p>
+        <h2 id="about-founder">Izabella <em>Moura.</em></h2>
+        <div className="about-copy">
+          <p>
+            Formada em Design de Moda, Izabella une o olhar de
+            estilista à prática da costura. Entre croquis, moldes e provas, ela trabalha
+            da criação ao acabamento e observa como cada escolha muda o caimento de uma peça.
+          </p>
+          <p>
+            Como fundadora e CEO, ela leva essa experiência à curadoria da loja.
+            A mesma atenção que dedica a um tecido ou a um ajuste ajuda a orientar,
+            na consultoria e no ateliê, escolhas que respeitam o corpo, a rotina e
+            as preferências de cada cliente.
+          </p>
         </div>
       </div>
     </section>

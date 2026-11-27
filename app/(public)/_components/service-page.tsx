@@ -4,14 +4,12 @@ import Link from "next/link";
 import "@/components/storefront.css";
 import type { services } from "../_data/services";
 import { Footer } from "./footer";
-import { Header } from "./header";
-import { NavBar } from "./nav-bar";
+import { InstitutionalHeader } from "@/app/(public)/(information)/_components/institutional-header";
 
 export function ServicePage({ service }: { service: (typeof services)[number] }) {
   return (
     <div lang="pt-BR" className="storefront flex min-h-screen flex-col">
-      <Header />
-      <NavBar />
+      <InstitutionalHeader />
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-8 sm:py-16">
         <Link href="/#servicos" className="inline-flex min-h-11 items-center underline underline-offset-4">
           Voltar aos serviços

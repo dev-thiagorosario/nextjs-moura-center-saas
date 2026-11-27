@@ -1,56 +1,43 @@
-import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
-import { productCollections } from "@/app/(public)/_data/products";
+import dressmaking from "../_assets/dressmaking.webp";
 
-const featuredCategories = [
-  { id: "novo-fitness", label: "Moda fitness" },
-  { id: "novo-praia", label: "Moda praia" },
-  { id: "novo-make", label: "Cosméticos" },
+const steps = [
+  {
+    title: "Antes de chegar à loja",
+    text: "Na escolha de produtos e fornecedores, nosso foco está na qualidade. Observamos os materiais, o toque e os acabamentos, com atenção a como cada item será usado no dia a dia.",
+  },
+  {
+    title: "Antes de chegar a você",
+    text: "O cuidado continua na preparação do pedido. Conferir os itens e protegê-los na embalagem faz parte da experiência que queremos entregar desde o momento em que você abre o pacote.",
+  },
 ];
-
-const products = productCollections.flatMap((collection) => collection.products);
-const featuredProducts = featuredCategories.flatMap(({ id, label }) => {
-  const product = products.find((item) => item.id === id);
-  return product ? [{ product, label }] : [];
-});
 
 export function ProductSelection() {
   return (
-    <section aria-labelledby="about-products" className="about-container py-12 sm:py-16 lg:py-20">
-      <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 sm:mb-7">
-        <h2 id="about-products" className="about-section-title">Conheça um pouco do nosso universo</h2>
-        <Link
-          href="/#novidades-title"
-          aria-label="Ver mais produtos da Moura Center"
-          className="group inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium text-(--shop-brand) underline decoration-(--shop-brand)/40 underline-offset-4 transition-colors hover:text-(--shop-ink) hover:decoration-current"
-        >
-          Ver mais
-          <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5 motion-reduce:transform-none" aria-hidden="true" />
-        </Link>
+    <section className="about-curation" aria-labelledby="about-curation">
+      <div className="about-wrap about-section about-curation-grid">
+        <div className="about-photo about-curation-photo about-reveal">
+          <Image
+            src={dressmaking}
+            alt="Tesoura, fita métrica e moldes de costura entre tecidos rosa e vinho."
+            fill
+            sizes="(min-width: 1440px) 700px, (min-width: 800px) 50vw, 94vw"
+          />
+        </div>
+        <div className="about-curation-copy">
+          <p className="about-label">Curadoria e bastidores</p>
+          <h2 id="about-curation">O cuidado começa <em>na escolha.</em></h2>
+          <ul className="about-curation-steps">
+            {steps.map(({ title, text }) => (
+              <li key={title}>
+                <h3>{title}</h3>
+                <p className="about-copy">{text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <ul className="grid gap-4 sm:grid-cols-3 sm:gap-6 lg:gap-8">
-        {featuredProducts.map(({ product, label }) => (
-          <li key={product.id}>
-            <article className="grid grid-cols-[6rem_minmax(0,1fr)] items-center gap-4 sm:block">
-              <div className="relative aspect-square overflow-hidden rounded-lg bg-(--shop-line) sm:aspect-[4/3]">
-                <Image
-                  src={product.image}
-                  alt={product.imageAlt}
-                  fill
-                  sizes="(min-width: 1440px) 416px, (min-width: 640px) 31vw, 96px"
-                  className="object-cover"
-                />
-              </div>
-              <div className="sm:mt-3">
-                <p className="text-sm font-medium text-(--shop-brand)">{label}</p>
-                <h3 className="mt-1 text-sm leading-snug font-medium sm:text-base">{product.name}</h3>
-              </div>
-            </article>
-          </li>
-        ))}
-      </ul>
     </section>
   );
 }
